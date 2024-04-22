@@ -6,7 +6,7 @@ TranslationEntry::TranslationEntry(const std::string& eng)
   {
     throw std::invalid_argument("");
   }
-  english = eng;
+  english_ = eng;
 }
 
 TranslationEntry::~TranslationEntry()
@@ -19,45 +19,73 @@ void TranslationEntry::addTranslation(const std::string& rus)
   {
     throw std::invalid_argument("");
   }
-  translations.insert(rus);
+  translations_.insert(rus);
 }
 
 void TranslationEntry::removeTranslation(const std::string& rus)
 {
-  translations.remove(rus);
-}
-
-bool TranslationEntry::operator<(const TranslationEntry& other) const
-{
-  return english < other.english;
-}
-
-bool TranslationEntry::operator>(const TranslationEntry& other) const
-{
-  return english > other.english;
-}
-
-bool TranslationEntry::operator==(const TranslationEntry& other) const
-{
-  return english == other.english;
+  translations_.remove(rus);
 }
 
 void TranslationEntry::addTranslations(const TranslationEntry& other)
 {
-  if (english != other.english)
+  if (english_ != other.english_)
   {
     throw std::invalid_argument("");
   }
-  translations.addElements(other.translations);
+  translations_.addElements(other.translations_);
 }
 
 void TranslationEntry::removeTranslations(const TranslationEntry& other)
 {
-  if (english != other.english)
+  if (english_ != other.english_)
   {
     throw std::invalid_argument("");
   }
-  translations.removeElements(other.translations);
+  translations_.removeElements(other.translations_);
+}
+
+TranslationEntry getIntersectionTranslations(const TranslationEntry& te1, const TranslationEntry& te2)
+{
+  if (te1.english_ != te2.english_)
+  {
+    throw std::invalid_argument("");
+  }
+  TranslationEntry result(te1.english_);
+  result.translations_ = getIntersectionTree(te1.translations_, te2.translations_);
+  return result;
+}
+
+TranslationEntry getDifferenceTranslations(const TranslationEntry& te1, const TranslationEntry& te2)
+{
+  if (te1.english_ != te2.english_)
+  {
+    throw std::invalid_argument("");
+  }
+  TranslationEntry result(te1.english_);
+  result.translations_ = getDifferenceTree(te1.translations_, te2.translations_);
+  return result;
+}
+
+bool TranslationEntry::operator<(const TranslationEntry& other) const
+{
+  return english_ < other.english_;
+}
+
+bool TranslationEntry::operator>(const TranslationEntry& other) const
+{
+  return english_ > other.english_;
+}
+
+bool TranslationEntry::operator==(const TranslationEntry& other) const
+{
+  return english_ == other.english_;
+}
+
+std::ostream& operator<<(std::ostream& os, const TranslationEntry& te)
+{
+  os << te.english_ << ": " << te.translations_;
+  return os;
 }
 
 bool TranslationEntry::containsOnlyEnglishLetters(const std::string& word)
@@ -86,32 +114,4 @@ bool TranslationEntry::containsOnlyRussianLetters(const std::string& word)
     }
   }
   return result;
-}
-
-TranslationEntry getIntersectionTranslations(const TranslationEntry& te1, const TranslationEntry& te2)
-{
-  if (te1.english != te2.english)
-  {
-    throw std::invalid_argument("");
-  }
-  TranslationEntry result(te1.english);
-  result.translations = getIntersectionTree(te1.translations, te2.translations);
-  return result;
-}
-
-TranslationEntry getDifferenceTranslations(const TranslationEntry& te1, const TranslationEntry& te2)
-{
-  if (te1.english != te2.english)
-  {
-    throw std::invalid_argument("");
-  }
-  TranslationEntry result(te1.english);
-  result.translations = getDifferenceTree(te1.translations, te2.translations);
-  return result;
-}
-
-std::ostream& operator<<(std::ostream& os, const TranslationEntry& te)
-{
-  os << te.english << ": " << te.translations;
-  return os;
 }
