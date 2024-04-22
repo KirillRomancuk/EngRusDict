@@ -14,7 +14,6 @@ int main()
 
   std::cout << te << "\n";
   
-  copyTe.removeTranslation("Cat");
   copyTe.removeTranslations(te);
 
   std::cout << copyTe << "\n";

@@ -2,11 +2,12 @@
 
 TranslationEntry::TranslationEntry(const std::string& eng)
 {
-  if (!containsOnlyEnglishLetters(eng))
+  std::string lowerEng = getLettersToLower(eng);
+  if (!containsOnlyEnglishLetters(lowerEng))
   {
     throw std::invalid_argument("");
   }
-  english_ = eng;
+  english_ = lowerEng;
 }
 
 TranslationEntry::~TranslationEntry()
@@ -15,16 +16,22 @@ TranslationEntry::~TranslationEntry()
 
 void TranslationEntry::addTranslation(const std::string& rus)
 {
-  if (!containsOnlyRussianLetters(rus))
+  std::string lowerRus = getLettersToLower(rus);
+  if (!containsOnlyRussianLetters(lowerRus))
   {
     throw std::invalid_argument("");
   }
-  translations_.insert(rus);
+  translations_.insert(lowerRus);
 }
 
 void TranslationEntry::removeTranslation(const std::string& rus)
 {
-  translations_.remove(rus);
+  std::string lowerRus = getLettersToLower(rus);
+  if (!containsOnlyRussianLetters(lowerRus))
+  {
+    throw std::invalid_argument("");
+  }
+  translations_.remove(lowerRus);
 }
 
 void TranslationEntry::addTranslations(const TranslationEntry& other)
@@ -93,7 +100,7 @@ bool TranslationEntry::containsOnlyEnglishLetters(const std::string& word)
   bool result = true;
   for (char c : word)
   {
-    if (!((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z')))
+    if (!(c >= 'a' && c <= 'z'))
     {
       result = false;
       break;
@@ -107,7 +114,7 @@ bool TranslationEntry::containsOnlyRussianLetters(const std::string& word)
   bool result = true;
   for (char c : word)
   {
-    if (!((c >= 'À' && c <= 'ß') || (c >= 'à' && c <= 'ÿ')))
+    if (!(c >= 'à' && c <= 'ÿ'))
     {
       result = false;
       break;
