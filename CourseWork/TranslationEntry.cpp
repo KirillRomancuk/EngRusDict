@@ -1,6 +1,13 @@
 #include "TranslationEntry.h"
 
-TranslationEntry::TranslationEntry(const std::string& eng) : english(eng) {}
+TranslationEntry::TranslationEntry(const std::string& eng)
+{
+  if (!containsOnlyEnglishLetters(eng))
+  {
+    throw std::invalid_argument("");
+  }
+  english = eng;
+}
 
 TranslationEntry::~TranslationEntry()
 {
@@ -8,6 +15,10 @@ TranslationEntry::~TranslationEntry()
 
 void TranslationEntry::addTranslation(const std::string& rus)
 {
+  if (!containsOnlyRussianLetters(rus))
+  {
+    throw std::invalid_argument("");
+  }
   translations.insert(rus);
 }
 
@@ -47,6 +58,34 @@ void TranslationEntry::removeTranslations(const TranslationEntry& other)
     throw std::invalid_argument("");
   }
   translations.removeElements(other.translations);
+}
+
+bool TranslationEntry::containsOnlyEnglishLetters(const std::string& word)
+{
+  bool result = true;
+  for (char c : word)
+  {
+    if (!((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z')))
+    {
+      result = false;
+      break;
+    }
+  }
+  return result;
+}
+
+bool TranslationEntry::containsOnlyRussianLetters(const std::string& word)
+{
+  bool result = true;
+  for (char c : word)
+  {
+    if (!((c >= 'À' && c <= 'ß') || (c >= 'à' && c <= 'ÿ')))
+    {
+      result = false;
+      break;
+    }
+  }
+  return result;
 }
 
 TranslationEntry getIntersectionTranslations(const TranslationEntry& te1, const TranslationEntry& te2)

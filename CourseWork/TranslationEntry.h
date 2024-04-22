@@ -25,6 +25,9 @@
     friend TranslationEntry getIntersectionTranslations(const TranslationEntry& te1, const TranslationEntry& te2);
     friend TranslationEntry getDifferenceTranslations(const TranslationEntry& te1, const TranslationEntry& te2);
     friend std::ostream& operator<<(std::ostream& os, const TranslationEntry& wp);
+
+    bool containsOnlyEnglishLetters(const std::string& word);
+    bool containsOnlyRussianLetters(const std::string& word);
   };
 
   #endif // !TRANSLATIONENTRY_H
