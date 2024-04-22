@@ -1,6 +1,7 @@
 #ifndef AVLTREE_H
 #define AVLTREE_H
 
+#include <iostream>
 #include <iomanip>
 
 template <class T>
