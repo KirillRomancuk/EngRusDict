@@ -14,6 +14,7 @@
 11 Команда: clear <dictionary>
 12 Команда: display <dictionary>
 13 Команда: getTranslation <key>
+14 Команда: readDict <"путо к файлу">
 //14 Команда: updateTranslation <dictionary> <key>
 
 EngRusDict:
