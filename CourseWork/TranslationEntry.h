@@ -30,6 +30,8 @@ private:
 
   bool containsOnlyEnglishLetters(const std::string& word);
   bool containsOnlyRussianLetters(const std::string& word);
+
+  std::string getLettersToLower(const std::string& word);
 };
 
 #endif // TRANSLATIONENTRY_H

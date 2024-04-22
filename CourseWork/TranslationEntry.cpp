@@ -115,3 +115,13 @@ bool TranslationEntry::containsOnlyRussianLetters(const std::string& word)
   }
   return result;
 }
+
+std::string TranslationEntry::getLettersToLower(const std::string& word)
+{
+  std::string result;
+  for (char c : word)
+  {
+    result += std::tolower(c);
+  }
+  return result;
+}
