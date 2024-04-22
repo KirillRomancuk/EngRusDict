@@ -14,6 +14,11 @@ TranslationEntry::~TranslationEntry()
 {
 }
 
+std::string TranslationEntry::getEnglishWord() const
+{
+  return english_;
+}
+
 void TranslationEntry::addTranslation(const std::string& rus)
 {
   std::string lowerRus = getLettersToLower(rus);

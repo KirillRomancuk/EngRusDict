@@ -41,5 +41,8 @@ int main()
   std::cout << getDifferenceTranslations(te1, te2) << "\n";
   std::cout << getIntersectionTranslations(te2, te1) << "\n";
   std::cout << getDifferenceTranslations(te2, te1) << "\n";
+
+  std::cout << te1.getEnglishWord() << " " << te.getEnglishWord() << "\n";
+
   return 0;
 }

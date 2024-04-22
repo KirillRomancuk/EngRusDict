@@ -9,6 +9,8 @@ public:
   TranslationEntry(const std::string& eng);
   ~TranslationEntry();
 
+  std::string getEnglishWord() const;
+
   void addTranslation(const std::string& rus);
   void removeTranslation(const std::string& rus);
 
