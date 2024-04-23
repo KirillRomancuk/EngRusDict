@@ -6,6 +6,7 @@
 class TranslationEntry
 {
 public:
+  TranslationEntry();
   TranslationEntry(const std::string& eng);
   ~TranslationEntry();
 

@@ -1,5 +1,9 @@
 #include "TranslationEntry.h"
 
+TranslationEntry::TranslationEntry()
+{
+}
+
 TranslationEntry::TranslationEntry(const std::string& eng)
 {
   std::string lowerEng = getLettersToLower(eng);
