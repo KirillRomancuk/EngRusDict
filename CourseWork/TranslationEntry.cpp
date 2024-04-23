@@ -19,6 +19,11 @@ std::string TranslationEntry::getEnglishWord() const
   return english_;
 }
 
+size_t TranslationEntry::getCountTranslations() const
+{
+  return translations_.getCountElements();
+}
+
 void TranslationEntry::addTranslation(const std::string& rus)
 {
   std::string lowerRus = getLettersToLower(rus);

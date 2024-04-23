@@ -44,5 +44,7 @@ int main()
 
   std::cout << te1.getEnglishWord() << " " << te.getEnglishWord() << "\n";
 
+  std::cout << "te1: " << te1.getCountTranslations() << " te2: " << te2.getCountTranslations() << "\n";
+
   return 0;
 }
