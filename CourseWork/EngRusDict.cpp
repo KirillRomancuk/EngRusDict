@@ -52,7 +52,7 @@ void EngRusDict::removeWordFromEngRusDict(EngRusDict& other)
 
 void EngRusDict::display()
 {
-  std::cout << name_ << "\n";
+  std::cout << "Name of dict: \"" << name_ << "\" Words: " << getCountWords() << "\n";
   std::cout << words_ << "\n";
 }
 
