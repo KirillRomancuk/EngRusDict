@@ -1,50 +1,57 @@
 ﻿#include <iostream>
 
-#include "TranslationEntry.h"
+#include "EngRusDict.h"
 
 int main()
 {
   setlocale(LC_ALL, "Russian");
-
   TranslationEntry te("Cat");
   te.addTranslation("Кот");
   TranslationEntry copyTe(te);
   copyTe.addTranslation("Котяра");
   te.addTranslations(copyTe);
 
-  std::cout << te << "\n";
+  EngRusDict first("first");
+
+  first.addWord(te);
+
+  first.display();
+  EngRusDict moveFirst(std::move(first));
+  first.display();
+  moveFirst.display();
+
+  EngRusDict  second("second");
+
+  second.addWordFromEngRusDict(moveFirst);
+
+  TranslationEntry book("Book");
+  book.addTranslation("Книга");
+  book.addTranslation("Книжонка");
+  book.addTranslation("Книженька");
+
+  TranslationEntry home("home");
+  home.addTranslation("дом");
+  home.addTranslation("ДОМИНА");
+  home.addTranslation("домик");
+
+  TranslationEntry bed("bed");
+  bed.addTranslation("кровать");
+  bed.addTranslation("КРОВАТИНА");
+  bed.addTranslation("бэд");
+
+  second.addWord(bed);
+  second.addWord(book);
+  second.addWord(home);
+  second.addWordFromEngRusDict(moveFirst);
+
+  moveFirst.addWord(bed);
+
+  moveFirst.display();
+  second.display();
   
-  copyTe.removeTranslations(te);
-
-  std::cout << copyTe << "\n";
-  std::cout << te << "\n";
-  std::cout << "\n------------------------------\n\n";
-  
-  TranslationEntry te1("Book");
-  TranslationEntry te2(te1);
-
-  te1.addTranslation("Книга");
-  te1.addTranslation("Книженька");
-  te1.addTranslation("Книжуличка");
-  te1.addTranslation("Буук");
-  te1.addTranslation("Книжонка");
-  te1.addTranslation("Букваръ");
-  te1.addTranslation("Книжонка");
-
-
-  te2.addTranslation("Книга");
-  te2.addTranslation("Книженька");
-  te2.addTranslation("Книжонка");
-  std::cout << "te1: " << te1 << "\n";
-  std::cout << "te2: " << te2 << "\n";
-  std::cout << getIntersectionTranslations(te1, te2) << "\n";
-  std::cout << getDifferenceTranslations(te1, te2) << "\n";
-  std::cout << getIntersectionTranslations(te2, te1) << "\n";
-  std::cout << getDifferenceTranslations(te2, te1) << "\n";
-
-  std::cout << te1.getEnglishWord() << " " << te.getEnglishWord() << "\n";
-
-  std::cout << "te1: " << te1.getCountTranslations() << " te2: " << te2.getCountTranslations() << "\n";
-
+  getDifferenceWithEngRusDict("test", moveFirst, second).display();
+  getIntersectionWithEngRusDict("test", moveFirst, second).display();
+  getDifferenceWithEngRusDict("test", second, moveFirst).display();
+  getIntersectionWithEngRusDict("test", second, moveFirst).display();
   return 0;
 }
