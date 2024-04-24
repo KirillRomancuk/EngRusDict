@@ -467,26 +467,6 @@ private:
       displayHelper(node->right_, separator);
     }
   }
-  /*
-  friend std::ostream& operator<<(std::ostream& os, const Node* node)
-  {
-    if (node != nullptr)
-    {
-      os << node->left_;
-      if (node->left_ != nullptr)
-      {
-        os << ", ";
-      }
-      os << node->data_;
-      if (node->right_ != nullptr)
-      {
-        os << ", ";
-      }
-      os << node->right_;
-    }
-    return os;
-  }
-  */
 };
 
 #endif // !AVLTREE_H
