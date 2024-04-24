@@ -53,7 +53,8 @@ void EngRusDict::removeWordFromEngRusDict(EngRusDict& other)
 void EngRusDict::display()
 {
   std::cout << "Name of dict: \"" << name_ << "\" Words: " << getCountWords() << "\n";
-  std::cout << words_ << "\n";
+  words_.display("; ");
+  std::cout << "\n";
 }
 
 EngRusDict getIntersectionWithEngRusDict(std::string name, EngRusDict& erd1, EngRusDict& erd2)

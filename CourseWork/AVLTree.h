@@ -102,9 +102,9 @@ public:
     return os;
   }
 
-  void display() const
+  void display(std::string separator = ", ") const
   {
-    std::cout << *this << " len: " << getCountElements() << "\n";
+    displayHelper(root_, separator);
   }
 
 private:
@@ -449,6 +449,44 @@ private:
       return true;
     }
   }
+
+  void displayHelper(const Node* node, std::string separator) const
+  {
+    if (node != nullptr)
+    {
+      displayHelper(node->left_, separator);
+      if (node->left_ != nullptr)
+      {
+        std::cout << separator;
+      }
+      std::cout << node->data_;
+      if (node->right_ != nullptr)
+      {
+        std::cout << separator;
+      }
+      displayHelper(node->right_, separator);
+    }
+  }
+  /*
+  friend std::ostream& operator<<(std::ostream& os, const Node* node)
+  {
+    if (node != nullptr)
+    {
+      os << node->left_;
+      if (node->left_ != nullptr)
+      {
+        os << ", ";
+      }
+      os << node->data_;
+      if (node->right_ != nullptr)
+      {
+        os << ", ";
+      }
+      os << node->right_;
+    }
+    return os;
+  }
+  */
 };
 
 #endif // !AVLTREE_H
