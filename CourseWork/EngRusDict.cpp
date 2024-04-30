@@ -42,7 +42,10 @@ size_t EngRusDict::getCountTranslations(std::string eng)
 
 void EngRusDict::addWord(const TranslationEntry& te)
 {
-  words_.insert(te);
+  if (te.getEnglishWord() != "")
+  {
+    words_.insert(te);
+  }
 }
 
 void EngRusDict::removeWord(std::string keyEng)
