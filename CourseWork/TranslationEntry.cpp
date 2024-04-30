@@ -127,7 +127,6 @@ std::istream& operator>>(std::istream& is, TranslationEntry& te)
     te = TranslationEntry(eng);
     while (std::getline(ss, rus, ',') && !rus.empty())
     {
-      //rus.erase(std::remove(rus.begin(), rus.end(), ' '), rus.end());
       rus.erase(0, 1);
       te.addTranslation(rus);
     }
