@@ -120,12 +120,10 @@ std::istream& operator>>(std::istream& is, TranslationEntry& te)
   }
   try
   {
-    std::string wordPair, eng, rus;
-    std::getline(is, wordPair, ';');
-    std::istringstream ss(wordPair);
-    std::getline(ss, eng, ':');
+    std::string eng, rus;
+    std::getline(is, eng, ':');
     te = TranslationEntry(eng);
-    while (std::getline(ss, rus, ',') && !rus.empty())
+    while (std::getline(is, rus, ',') && !rus.empty())
     {
       rus.erase(0, 1);
       te.addTranslation(rus);
@@ -134,6 +132,7 @@ std::istream& operator>>(std::istream& is, TranslationEntry& te)
   catch (std::invalid_argument& ex)
   {
     is.setstate(std::ios::failbit);
+    te = TranslationEntry();
   }
   return is;
 }
