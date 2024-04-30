@@ -1,9 +1,9 @@
-"First"
+First
 book: книга, книженька;
 home: дом;
 
-"Second"
+Second
 bed: кровать;
 cat: кот, кошка, кошара;
 
-"Third"
+Third
