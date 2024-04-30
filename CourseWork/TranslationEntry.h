@@ -27,6 +27,7 @@ public:
   bool operator==(const TranslationEntry& other) const;
 
   friend std::ostream& operator<<(std::ostream& os, const TranslationEntry& te);
+  friend std::istream& operator>>(std::istream& is, TranslationEntry& te);
 
 private:
   std::string english_;
