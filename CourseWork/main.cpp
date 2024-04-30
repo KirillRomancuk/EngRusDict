@@ -1,19 +1,15 @@
 ﻿#include <iostream>
 
-#include "EngRusDict.h"
+#include "ReadFromFile.h"
 
 int main()
 {
-  TranslationEntry te;
-  std::cin >> te;
-  if (std::cin.fail())
+  setlocale(LC_ALL, "RU");
+  MyVector < EngRusDict > EngRusDicts = ReadEngRusDictFromFile("Input.txt");
+  
+  for (EngRusDict erd : EngRusDicts)
   {
-    std::cin.clear();
-    std::cin.ignore(std::numeric_limits< std::streamsize >::max(), '\n');
-    std::cout << "'If' worked\n";
+    erd.display();
   }
-  std::cin >> te;
-  std::cout << te;
-
   return 0;
 }
