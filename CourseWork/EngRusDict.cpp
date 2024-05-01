@@ -29,6 +29,16 @@ void EngRusDict::clear()
   words_.clear();
 }
 
+std::string EngRusDict::getName() const
+{
+  return name_;
+}
+
+AVLTree<std::string> EngRusDict::getTranslations(std::string eng) const
+{
+  return words_.search(eng).getTranslations();
+}
+
 size_t EngRusDict::getCountWords()
 {
   return words_.getCountElements();
@@ -38,6 +48,32 @@ size_t EngRusDict::getCountTranslations(std::string eng)
 {
   TranslationEntry te(eng);
   return words_.search(te).getCountTranslations();
+}
+
+void EngRusDict::addTranslation(std::string eng, std::string translation)
+{
+  TranslationEntry te(eng);
+  if (!words_.contains(te))
+  {
+    throw std::invalid_argument("");
+  }
+  TranslationEntry oldTe = words_.search(te);
+  words_.remove(te);
+  oldTe.addTranslation(translation);
+  words_.insert(oldTe);
+}
+
+void EngRusDict::removeTranslation(std::string eng, std::string translation)
+{
+  TranslationEntry te(eng);
+  if (!words_.contains(te))
+  {
+    throw std::invalid_argument("");
+  }
+  TranslationEntry oldTe = words_.search(te);
+  words_.remove(te);
+  oldTe.removeTranslation(translation);
+  words_.insert(oldTe);
 }
 
 void EngRusDict::addWord(const TranslationEntry& te)

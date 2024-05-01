@@ -13,9 +13,14 @@ public:
 	~EngRusDict();
 	void clear();
 
+	std::string getName() const;
+	AVLTree< std::string > getTranslations(std::string eng) const;
+
 	size_t getCountWords();
 	size_t getCountTranslations(std::string eng);
 
+	void addTranslation(std::string eng, std::string translation);
+	void removeTranslation(std::string eng, std::string translation);
 	void addWord(const TranslationEntry& wp);
 	void removeWord(std::string keyEng);
 
