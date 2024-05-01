@@ -11,6 +11,7 @@ public:
   ~TranslationEntry();
 
   std::string getEnglishWord() const;
+  AVLTree< std::string > getTranslations() const;
   size_t getCountTranslations() const;
 
   void addTranslation(const std::string& rus);

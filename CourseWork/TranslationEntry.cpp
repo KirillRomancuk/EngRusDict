@@ -25,6 +25,11 @@ std::string TranslationEntry::getEnglishWord() const
   return english_;
 }
 
+AVLTree<std::string> TranslationEntry::getTranslations() const
+{
+    return translations_;
+}
+
 size_t TranslationEntry::getCountTranslations() const
 {
   return translations_.getCountElements();
