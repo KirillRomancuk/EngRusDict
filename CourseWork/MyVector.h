@@ -35,6 +35,19 @@ public:
     array_[size_++] = value;
   }
 
+  void erase(size_t index)
+  {
+    if (index >= size_) {
+      throw std::out_of_range("Index out of range");
+    }
+
+    for (size_t i = index; i < size_ - 1; ++i) {
+      array_[i] = array_[i + 1];
+    }
+
+    size_--;
+  }
+
   size_t getSize() const
   {
     return size_;
