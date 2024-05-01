@@ -1,6 +1,7 @@
 ﻿#include <iostream>
 
 #include "ReadFromFile.h"
+#include "ApplyCommand.h"
 
 int main()
 {
@@ -11,5 +12,12 @@ int main()
   {
     erd.display();
   }
+  while (true)
+  {
+    std::string command;
+    std::cin >> command;
+    applyCommand(EngRusDicts, command);
+  }
+  
   return 0;
 }
