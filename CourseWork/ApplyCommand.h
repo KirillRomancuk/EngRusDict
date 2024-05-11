@@ -1,82 +1,13 @@
 #ifndef APPLYCOMMAND_H
 #define APPLYCOMMAND_H
 
+#include <windows.h>
+
+#include "TranslationEntry.h"
 #include "ReadFromFile.h"
 #include "MyVector.h"
 
-/*
-'If in func' worked
-Name of dict: "First" Words: 2:
-book: книга, книженька
-home: дом
-
-Name of dict: "Second" Words: 2:
-bed: кровать
-cat: кот, кошара, кошка
-
-Name of dict: "Third" Words: 2:
-book: книга, книженька, книжище
-home: дом
-
-removeWords First Third
-display
-Name of dict: "First" Words: 0:
-
-
-Name of dict: "Second" Words: 2:
-bed: кровать
-cat: кот, кошара, кошка
-
-Name of dict: "Third" Words: 2:
-book: книга, книженька, книжище
-home: дом
-
-addWords First Third
-display
-Name of dict: "First" Words: 2:
-book: книга, книженька, книжище
-home: дом
-
-Name of dict: "Second" Words: 2:
-bed: кровать
-cat: кот, кошара, кошка
-
-Name of dict: "Third" Words: 2:
-book: книга, книженька, книжище
-home: дом
-
-remove Third book книжище
-display
-Name of dict: "First" Words: 2:
-book: книга, книженька, книжище
-home: дом
-
-Name of dict: "Second" Words: 2:
-bed: кровать
-cat: кот, кошара, кошка
-
-Name of dict: "Third" Words: 2:
-book: книга, книженька, книжище
-home: дом
-
-add Third book книжище
-display
-Name of dict: "First" Words: 2:
-book: книга, книженька, книжище
-home: дом
-
-Name of dict: "Second" Words: 2:
-bed: кровать
-cat: кот, кошара, кошка
-
-Name of dict: "Third" Words: 2:
-book: , книга, книженька, книжище
-home: дом
-
-
-*/
-
-void applyCommand(MyVector< EngRusDict >& vector, std::string command)
+void applyCommand(MyVector< EngRusDict >& vector, std::string command, std::istream& in, std::ostream& out)
 {
   if (command == "createDict")
   {
@@ -121,8 +52,17 @@ void applyCommand(MyVector< EngRusDict >& vector, std::string command)
       if (vector[i].getName() == name)
       {
         std::string key, translation;
-        std::cin >> key, translation;
-        vector[i].addTranslation(key, translation);
+        std::cin >> key >> translation;
+        try
+        {
+          vector[i].addTranslation(key, translation);
+        }
+        catch (const std::invalid_argument&)
+        {
+          TranslationEntry te(key);
+          te.addTranslation(translation);
+          vector[i].addWord(te);
+        }
         flag = false;
       }
     }
@@ -141,9 +81,16 @@ void applyCommand(MyVector< EngRusDict >& vector, std::string command)
       if (vector[i].getName() == name)
       {
         std::string key, translation;
-        std::cin >> key, translation;
-        vector[i].removeTranslation(key, translation);
+        std::cin >> key >> translation;
         flag = false;
+        try
+        {
+          vector[i].removeTranslation(key, translation);
+        }
+        catch (const std::invalid_argument&)
+        {
+          std::runtime_error("key не найден");
+        }
       }
     }
     if (flag)
@@ -248,7 +195,10 @@ void applyCommand(MyVector< EngRusDict >& vector, std::string command)
           }
         }
       }
-
+    }
+    if (flag)
+    {
+      throw std::runtime_error("Словарь не найден");
     }
   }
   else if (command == "clear")
@@ -306,7 +256,11 @@ void applyCommand(MyVector< EngRusDict >& vector, std::string command)
     for (size_t i = 0; i < newVector.getSize(); i++)
     {
       vector.push_back(newVector[i]);
-    }    
+    }
+  }
+  else
+  {
+    throw std::invalid_argument("Incorrect command");
   }
 }
 

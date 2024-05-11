@@ -1,14 +1,14 @@
 # EngRusDict
 
 Консольные команды:
-1 Команда: createDict <name  of new dict>
-2 Команда: removeDict <name  of new dict>
+1 Команда: createDict <name  of new dict> display
+2 Команда: removeDict <name  of new dict> display
 3 Команда: add <dictionary> <key> <translation> //
 4 Команда: remove <dictionary> <key> <translation> //
 5 Команда: addWords <dictionary1> <dictionary2> +
 6 Команда: removeWords <dictionary1> <dictionary2> +
-7 Команда: getIntersection <name  of new dict> <dictionary1> < dictionary2> //
-8 Команда: getDifference <name  of new dict> <dictionary1> <dictionary2> //
+7 Команда: getIntersection <name  of new dict> <dictionary1> < dictionary2> +
+8 Команда: getDifference <name  of new dict> <dictionary1> <dictionary2> +
 9 Команда: clear <dictionary> +
 10 Команда: display <dictionary> +
 11 Команда: getTranslation <key> /+/

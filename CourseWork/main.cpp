@@ -5,19 +5,26 @@
 
 int main()
 {
-  setlocale(LC_ALL, "RU");
+  system("chcp 1251");
+  system("cls");
   MyVector < EngRusDict > EngRusDicts = ReadEngRusDictFromFile("Input.txt");
-  
-  for (EngRusDict erd : EngRusDicts)
-  {
-    erd.display();
-  }
   while (true)
   {
     std::string command;
     std::cin >> command;
-    applyCommand(EngRusDicts, command);
+    if (command == "exit")
+    {
+      break;
+    }
+    try
+    {
+      applyCommand(EngRusDicts, command, std::cin, std::cout);
+    }
+    catch (const std::exception&)
+    {
+      std::cout << "<INVALID COMMAND>\n";
+      cleanIStream(std::cin);
+    }
   }
-  
   return 0;
 }
