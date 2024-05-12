@@ -100,11 +100,11 @@ void EngRusDict::removeWordFromEngRusDict(EngRusDict& other)
   words_.removeElements(other.words_);
 }
 
-void EngRusDict::display()
+void EngRusDict::display(std::ostream& out)
 {
-  std::cout << "Name of dict: \"" << name_ << "\" Words: " << getCountWords() << ":\n";
+  out << "Name of dict: \"" << name_ << "\" Words: " << getCountWords() << ":\n";
   words_.display("\n");
-  std::cout << "\n\n";
+  out << "\n";
 }
 
 EngRusDict& EngRusDict::operator=(const EngRusDict& other)

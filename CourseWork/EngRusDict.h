@@ -30,7 +30,7 @@ public:
 	friend EngRusDict getIntersectionWithEngRusDict(std::string name, EngRusDict& erd1, EngRusDict& erd2);
 	friend EngRusDict getDifferenceWithEngRusDict(std::string name, EngRusDict& erd1, EngRusDict& erd2);
 
-	void display();
+	void display(std::ostream& out);
 
 	EngRusDict& operator=(const EngRusDict& other);
 
