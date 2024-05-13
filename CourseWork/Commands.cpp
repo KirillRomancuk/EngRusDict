@@ -40,21 +40,20 @@ void cmd::remove(MyVector<EngRusDict>& vector, std::istream& in) {
   std::string name;
   bool flag = true;
   in >> name;
-  for (size_t i = 0; i < vector.getSize(); i++) {
-    if (vector[i].getName() == name) {
-      std::string key, translation;
-      in >> key >> translation;
-      flag = false;
-      try {
-        vector[i].removeTranslation(key, translation);
-      }
-      catch (const std::invalid_argument&) {
-        throw std::runtime_error("key не найден или не соответствует формату");
-      }
-    }
+  size_t i = subcmd::findIndexDict(vector, name);
+  std::string key, translation;
+  in >> key >> translation;
+  if (translation == "ALL") {
+    vector[i].removeWord(key);
+    vector[i].addWord(TranslationEntry(key));
   }
-  if (flag) {
-    throw std::runtime_error("Словарь не найден");
+  else {
+    try {
+      vector[i].removeTranslation(key, translation);
+    }
+    catch (const std::invalid_argument&) {
+      throw std::runtime_error("key не найден или не соответствует формату");
+    }
   }
 }
 
