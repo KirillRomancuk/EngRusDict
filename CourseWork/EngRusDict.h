@@ -3,35 +3,43 @@
 
 #include "TranslationEntry.h"
 
-class EngRusDict
-{
-public:
-	EngRusDict();
-	EngRusDict(std::string name);
-	EngRusDict(EngRusDict& other);
-	EngRusDict(EngRusDict&& other) noexcept;
-	~EngRusDict();
-	void clear();
+class EngRusDict {
+ public:
+  EngRusDict();
+  EngRusDict(std::string name);
+  EngRusDict(EngRusDict& other);
+  EngRusDict(EngRusDict&& other) noexcept;
+  ~EngRusDict();
+  void clear();
 
-	size_t getCountWords();
-	size_t getCountTranslations(std::string eng);
+  std::string getName() const;
+  AVLTree<std::string> getTranslations(std::string eng) const;
 
-	void addWord(const TranslationEntry& wp);
-	void removeWord(std::string keyEng);
+  size_t getCountWords();
+  size_t getCountTranslations(std::string eng);
 
-	void addWordFromEngRusDict(EngRusDict& other);
-	void removeWordFromEngRusDict(EngRusDict& other);
+  void addTranslation(std::string eng, std::string translation);
+  void removeTranslation(std::string eng, std::string translation);
+  void addWord(const TranslationEntry& wp);
+  void removeWord(std::string keyEng);
 
-	friend EngRusDict getIntersectionWithEngRusDict(std::string name, EngRusDict& erd1, EngRusDict& erd2);
-	friend EngRusDict getDifferenceWithEngRusDict(std::string name, EngRusDict& erd1, EngRusDict& erd2);
+  void addWordFromEngRusDict(EngRusDict& other);
+  void removeWordFromEngRusDict(EngRusDict& other);
 
-	void display();
+  friend EngRusDict getIntersectionWithEngRusDict(std::string name,
+                                                  EngRusDict& erd1,
+                                                  EngRusDict& erd2);
+  friend EngRusDict getDifferenceWithEngRusDict(std::string name,
+                                                EngRusDict& erd1,
+                                                EngRusDict& erd2);
 
-	EngRusDict& operator=(const EngRusDict& other);
+  void display(std::ostream& out);
 
-private:
+  EngRusDict& operator=(const EngRusDict& other);
+
+ private:
   std::string name_;
-  AVLTree< TranslationEntry > words_;
+  AVLTree<TranslationEntry> words_;
 };
 
-#endif // !ENGRUSDICT_H
+#endif  // !ENGRUSDICT_H

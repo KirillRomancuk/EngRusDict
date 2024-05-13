@@ -5,24 +5,19 @@
 #include <stdexcept>
 
 template <class T>
-class MyVector
-{
-private:
+class MyVector {
+ private:
   T* array_;
   size_t size_;
   size_t capacity_;
   const int CAPACITY_CHANGE_FACTOR_ = 2;
 
-public:
+ public:
   MyVector() : array_(nullptr), size_(0), capacity_(0) {}
 
-  ~MyVector()
-  {
-    delete[] array_;
-  }
+  ~MyVector() { delete[] array_; }
 
-  void push_back(const T& value)
-  {
+  void push_back(const T& value) {
     if (size_ >= capacity_) {
       capacity_ = (capacity_ == 0) ? 1 : capacity_ * CAPACITY_CHANGE_FACTOR_;
       T* new_array = new T[capacity_];
@@ -35,33 +30,32 @@ public:
     array_[size_++] = value;
   }
 
-  size_t getSize() const
-  {
-    return size_;
+  void erase(size_t index) {
+    if (index >= size_) {
+      throw std::out_of_range("Индекс вне диапазона");
+    }
+
+    for (size_t i = index; i < size_ - 1; ++i) {
+      array_[i] = array_[i + 1];
+    }
+
+    size_--;
   }
 
-  T& operator[](size_t index)
-  {
+  size_t getSize() const { return size_; }
+
+  T& operator[](size_t index) {
     if (index >= size_) {
-      throw std::out_of_range("Index out of range");
+      throw std::out_of_range("Индекс вне диапазона");
     }
     return array_[index];
   }
 
-  void clear()
-  {
-    size_ = 0;
-  }
+  void clear() { size_ = 0; }
 
-  T* begin()
-  {
-    return array_;
-  }
+  T* begin() { return array_; }
 
-  T* end()
-  {
-    return array_ + size_;
-  }
+  T* end() { return array_ + size_; }
 };
 
-#endif // !MYVECTOR_H
+#endif  // !MYVECTOR_H
