@@ -102,9 +102,9 @@ public:
     return os;
   }
 
-  void display() const
+  void display(std::string separator = ", ") const
   {
-    std::cout << *this << " len: " << getCountElements() << "\n";
+    displayHelper(root_, separator);
   }
 
 private:
@@ -447,6 +447,24 @@ private:
     else
     {
       return true;
+    }
+  }
+
+  void displayHelper(const Node* node, std::string separator) const
+  {
+    if (node != nullptr)
+    {
+      displayHelper(node->left_, separator);
+      if (node->left_ != nullptr)
+      {
+        std::cout << separator;
+      }
+      std::cout << node->data_;
+      if (node->right_ != nullptr)
+      {
+        std::cout << separator;
+      }
+      displayHelper(node->right_, separator);
     }
   }
 };

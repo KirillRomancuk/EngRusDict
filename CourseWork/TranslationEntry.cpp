@@ -1,5 +1,9 @@
 #include "TranslationEntry.h"
 
+TranslationEntry::TranslationEntry()
+{
+}
+
 TranslationEntry::TranslationEntry(const std::string& eng)
 {
   std::string lowerEng = getLettersToLower(eng);
@@ -17,6 +21,11 @@ TranslationEntry::~TranslationEntry()
 std::string TranslationEntry::getEnglishWord() const
 {
   return english_;
+}
+
+size_t TranslationEntry::getCountTranslations() const
+{
+  return translations_.getCountElements();
 }
 
 void TranslationEntry::addTranslation(const std::string& rus)

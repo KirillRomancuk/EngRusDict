@@ -6,10 +6,12 @@
 class TranslationEntry
 {
 public:
+  TranslationEntry();
   TranslationEntry(const std::string& eng);
   ~TranslationEntry();
 
   std::string getEnglishWord() const;
+  size_t getCountTranslations() const;
 
   void addTranslation(const std::string& rus);
   void removeTranslation(const std::string& rus);
