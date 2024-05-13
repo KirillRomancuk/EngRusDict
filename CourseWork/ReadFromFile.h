@@ -11,7 +11,7 @@
 MyVector<EngRusDict> ReadEngRusDictFromFile(std::string pathToFile) {
   std::ifstream file(pathToFile);
   if (!file.is_open()) {
-    std::cout << "Error opening file" << std::endl;
+    throw std::invalid_argument("Error opening file");
   }
   MyVector<EngRusDict> EngRusDicts;
   std::string name;
