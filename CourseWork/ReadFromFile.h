@@ -8,11 +8,6 @@
 #include "EngRusDict.h"
 #include "MyVector.h"
 
-void cleanIStream(std::istream& in) {
-  in.clear();
-  in.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-}
-
 MyVector< EngRusDict > ReadEngRusDictFromFile(std::string pathToFile)
 {
   std::ifstream file(pathToFile);
@@ -33,7 +28,8 @@ MyVector< EngRusDict > ReadEngRusDictFromFile(std::string pathToFile)
       ss >> te;
       if (ss.fail() && !ss.eof())
       {
-        cleanIStream(ss);
+        ss.clear();
+        ss.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
       }
       newErd.addWord(te);
     }
