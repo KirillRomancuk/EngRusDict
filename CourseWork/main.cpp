@@ -1,93 +1,48 @@
 ﻿#include <iostream>
 
-#include "AVLTree.h"
+#include "TranslationEntry.h"
 
 int main()
 {
   setlocale(LC_ALL, "Russian");
 
-  AVLTree<std::string> tree;
+  TranslationEntry te("Cat");
+  te.addTranslation("Кот");
+  TranslationEntry copyTe(te);
+  copyTe.addTranslation("Котяра");
+  te.addTranslations(copyTe);
 
-  tree.insert("A");
-  tree.insert("B");
-  tree.insert("D");
-  tree.insert("C");
-  tree.insert("J");
-  tree.insert("E");
+  std::cout << te << "\n";
+  
+  copyTe.removeTranslations(te);
 
-  tree.display();
+  std::cout << copyTe << "\n";
+  std::cout << te << "\n";
+  std::cout << "\n------------------------------\n\n";
+  
+  TranslationEntry te1("Book");
+  TranslationEntry te2(te1);
 
-  AVLTree<std::string> deleteTree(tree);
+  te1.addTranslation("Книга");
+  te1.addTranslation("Книженька");
+  te1.addTranslation("Книжуличка");
+  te1.addTranslation("Буук");
+  te1.addTranslation("Книжонка");
+  te1.addTranslation("Букваръ");
+  te1.addTranslation("Книжонка");
 
-  deleteTree.remove("A");
-  deleteTree.remove("D");
-  deleteTree.remove("J");
 
-  tree.removeElements(deleteTree);
+  te2.addTranslation("Книга");
+  te2.addTranslation("Книженька");
+  te2.addTranslation("Книжонка");
+  std::cout << "te1: " << te1 << "\n";
+  std::cout << "te2: " << te2 << "\n";
+  std::cout << getIntersectionTranslations(te1, te2) << "\n";
+  std::cout << getDifferenceTranslations(te1, te2) << "\n";
+  std::cout << getIntersectionTranslations(te2, te1) << "\n";
+  std::cout << getDifferenceTranslations(te2, te1) << "\n";
 
-  tree.display();
-
-  AVLTree<std::string> addTree(std::move(deleteTree));
-
-  tree.addElements(addTree);
-
-  deleteTree = tree;
-
-  tree.display();
-
-  tree = addTree;
-
-  tree.display();
-
-  std::cout << "\n--------------------------------------------------\n\n";
-
-  std::cout << "deleteTree: ";
-  deleteTree.display();
-  std::cout << "tree: ";
-  tree.display();
-
-  getIntersectionTree(tree, deleteTree).display();
-  getDifferenceTree(tree, deleteTree).display();
-
-  getIntersectionTree(deleteTree, tree).display();
-  getDifferenceTree(deleteTree, tree).display();
-
-  std::cout << "\n--------------------------------------------------\n\n";
-
-  if (tree.contains("B") && tree.contains("C") && tree.contains("E"))
-  {
-    std::cout << "TRUE\n";
-  }
-  else
-  {
-    std::cout << "FALSE\n";
-  }
-
-  if (!(tree.contains("A") || tree.contains("D") || tree.contains("J")))
-  {
-    std::cout << "TRUE\n";
-  }
-  else
-  {
-    std::cout << "FALSE\n";
-  }
-
-  try
-  {
-    std::cout << tree.search("B") << " " << tree.search("C") << " " << tree.search("E") << "\n";
-    tree.search("G");
-  }
-  catch (std::exception& ex)
-  {
-    std::cout << "YEEEEES!!!!\n";
-  }
-
-  tree.display();
-  std::cout << "tree: ";
-  tree.clear();
-  tree.display();
-  tree.insert("END.");
-  tree.display();
+  std::cout << te1.getEnglishWord() << " " << te.getEnglishWord() << "\n";
 
   return 0;
 }

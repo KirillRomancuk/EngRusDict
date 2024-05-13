@@ -182,11 +182,12 @@ private:
         node->right_ = insertRecursive(node->right_, value);
       }
     }
+    /*
     else
     {
       throw std::invalid_argument("Inserting a duplicate into the AVLTree is not allowed");
     }
-
+    */
     node->height_ = 1 + std::max(getHeight(node->left_), getHeight(node->right_));
 
     size_t balance = getBalance(node);
