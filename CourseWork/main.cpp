@@ -4,6 +4,12 @@
 
 #include "Commands.h"
 
+void invalidCommand() {
+  std::cout << "<INVALID COMMAND>\n";
+  std::cin.clear();
+  std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+}
+
 namespace mapCommands {
 using mapCmd =
     std::map<std::string, std::function<void(std::istream&, std::ostream&)> >;
@@ -53,17 +59,11 @@ int main() {
     try {
       commands.at(command)(std::cin, std::cout);
     } catch (const std::out_of_range&) {
-      std::cout << "<INVALID COMMAND>\n";
-      std::cin.clear();
-      std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+      invalidCommand();
     } catch (const std::runtime_error&) {
-      std::cout << "<INVALID COMMAND>\n";
-      std::cin.clear();
-      std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+      invalidCommand();
     } catch (const std::invalid_argument&) {
-      std::cout << "<INVALID COMMAND>\n";
-      std::cin.clear();
-      std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+      invalidCommand();
     }
   }
   return 0;
