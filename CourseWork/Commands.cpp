@@ -15,41 +15,24 @@ void cmd::createDict(MyVector<EngRusDict>& vector, std::istream& in) {
 
 void cmd::removeDict(MyVector<EngRusDict>& vector, std::istream& in) {
   std::string name;
-  bool flag = true;
   in >> name;
-  for (size_t i = 0; i < vector.getSize(); i++) {
-    if (vector[i].getName() == name) {
-      vector.erase(i);
-      flag = false;
-      break;
-    }
-  }
-  if (flag) {
-    throw std::runtime_error("Словарь не найден");
-  }
+  vector.erase(subcmd::findIndexDict(vector, name));
 }
 
 void cmd::add(MyVector<EngRusDict>& vector, std::istream& in) {
   std::string name;
   bool flag = true;
   in >> name;
-  for (size_t i = 0; i < vector.getSize(); i++) {
-    if (vector[i].getName() == name) {
-      std::string key, translation;
-      in >> key >> translation;
-      try {
-        vector[i].addTranslation(key, translation);
-      }
-      catch (const std::invalid_argument&) {
-        TranslationEntry te(key);
-        te.addTranslation(translation);
-        vector[i].addWord(te);
-      }
-      flag = false;
-    }
+  size_t i = subcmd::findIndexDict(vector, name);
+  std::string key, translation;
+  in >> key >> translation;
+  try {
+    vector[i].addTranslation(key, translation);
   }
-  if (flag) {
-    throw std::runtime_error("Словарь не найден");
+  catch (const std::invalid_argument&) {
+    TranslationEntry te(key);
+    te.addTranslation(translation);
+    vector[i].addWord(te);
   }
 }
 
@@ -215,14 +198,14 @@ void cmd::help(std::ostream& out)
   out << "1. createDict <new dictionary>\n";
   out << "2. removeDict <dictionary>\n";
   out << "3. add <dictionary> <english word> <translation>\n";
-  out << "4. remove <dictionary> <english word> <>/<translation>\n";
+  out << "4. remove <dictionary> <english word> <ALL>/<translation>\n";
   out << "5. addWords <dictionaryIn> <dictionaryOut>\n";
   out << "6. getIntersection <new dictionary> <dictionaryOut> <dictionaryOut>\n";
   out << "7. getDifference <new dictionary> <dictionaryOut> <dictionaryOut>\n";
   out << "8. clear <dictionary>\n";
   out << "9. getTranslation <english word>\n";
   out << "10. readDicts <Path to the file>\n";
-  out << "11. display <>/<dictionary>\n";
+  out << "11. display <ALL>/<dictionary>\n";
   out << "12. help\n";
 }
 
@@ -234,4 +217,15 @@ bool cmd::subcmd::containsEngRusDict(MyVector<EngRusDict>& vector,
     }
   }
   return false;
+}
+
+size_t cmd::subcmd::findIndexDict(MyVector<EngRusDict>& vector, std::string name)
+{
+  for (size_t i = 0; i < vector.getSize(); i++) {
+    if (vector[i].getName() == name) {
+      return i;
+    }
+  }
+  std::string ErrorMessege = "Словарь не найден " + name;
+  throw std::runtime_error(ErrorMessege);
 }

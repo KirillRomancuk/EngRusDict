@@ -22,6 +22,7 @@ namespace cmd // command
   void help(std::ostream& out);
   namespace subcmd {
     bool containsEngRusDict(MyVector<EngRusDict>& vector, std::string name);
+    size_t findIndexDict(MyVector<EngRusDict>& vector, std::string name);
   } // namespace subcmd
 } // namespace cmd
 
