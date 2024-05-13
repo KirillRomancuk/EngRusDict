@@ -35,10 +35,7 @@ mapCmd createMapOfCommands(MyVector<EngRusDict>& EngRusDicts, std::istream& in,
   return commands;
 }
 }  // namespace mapCommands
-/*
-readDicts Input.txt
-display ALL
-*/
+
 int main() {
   system("chcp 1251");
   system("cls");
