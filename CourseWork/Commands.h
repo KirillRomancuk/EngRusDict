@@ -15,7 +15,7 @@ namespace cmd // command
   void getIntersection(MyVector<EngRusDict>& vector, std::istream& in);
   void getDifference(MyVector<EngRusDict>& vector, std::istream& in);
   void clear(MyVector<EngRusDict>& vector, std::istream& in);
-  void display(MyVector<EngRusDict>& vector, std::ostream& out);
+  void display(MyVector<EngRusDict>& vector, std::istream& in, std::ostream& out);
   void getTranslation(MyVector<EngRusDict>& vector, std::istream& in,
     std::ostream& out);
   void readDicts(MyVector<EngRusDict>& vector, std::istream& in);

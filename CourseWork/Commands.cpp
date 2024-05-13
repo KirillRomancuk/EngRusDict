@@ -104,9 +104,17 @@ void cmd::clear(MyVector<EngRusDict>& vector, std::istream& in) {
   vector[subcmd::findIndexDict(vector, name)].clear();
 }
 
-void cmd::display(MyVector<EngRusDict>& vector, std::ostream& out) {
-  for (size_t i = 0; i < vector.getSize(); i++) {
-    vector[i].display(out);
+void cmd::display(MyVector<EngRusDict>& vector, std::istream& in,
+                  std::ostream& out) {
+  std::string name;
+  in >> name;
+  if (name == "ALL")
+  {
+    for (size_t i = 0; i < vector.getSize(); i++) {
+      vector[i].display(out);
+    }
+  } else {
+    vector[subcmd::findIndexDict(vector, name)].display(out);
   }
 }
 
