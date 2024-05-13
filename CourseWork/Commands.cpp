@@ -108,8 +108,7 @@ void cmd::display(MyVector<EngRusDict>& vector, std::istream& in,
                   std::ostream& out) {
   std::string name;
   in >> name;
-  if (name == "ALL")
-  {
+  if (name == "ALL") {
     for (size_t i = 0; i < vector.getSize(); i++) {
       vector[i].display(out);
     }

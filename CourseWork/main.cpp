@@ -35,17 +35,9 @@ mapCmd createMapOfCommands(MyVector<EngRusDict>& EngRusDicts, std::istream& in,
   return commands;
 }
 }  // namespace mapCommands
-// ЗАПРЕТИТЬ Создание словаря ALL
 /*
 readDicts Input.txt
-display
-remove First book ALL
-
-
-getIntersection testAA First Second
-getIntersection testAB First Third
-getDifference testBA First Second
-getDifference testBB First Third
+display ALL
 */
 int main() {
   system("chcp 1251");

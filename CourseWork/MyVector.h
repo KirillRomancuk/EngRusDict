@@ -6,13 +6,13 @@
 
 template <class T>
 class MyVector {
-private:
+ private:
   T* array_;
   size_t size_;
   size_t capacity_;
   const int CAPACITY_CHANGE_FACTOR_ = 2;
 
-public:
+ public:
   MyVector() : array_(nullptr), size_(0), capacity_(0) {}
 
   ~MyVector() { delete[] array_; }
