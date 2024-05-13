@@ -4,7 +4,7 @@ EngRusDict::EngRusDict() { name_ = ""; }
 
 EngRusDict::EngRusDict(std::string name) {
   if (name == "ALL") {
-    throw std::invalid_argument("");
+    throw std::invalid_argument("Невозможно создать словарь с именем \"ALL\"");
   }
   name_ = name;
 }
@@ -45,7 +45,8 @@ size_t EngRusDict::getCountTranslations(std::string eng) {
 void EngRusDict::addTranslation(std::string eng, std::string translation) {
   TranslationEntry te(eng);
   if (!words_.contains(te)) {
-    throw std::invalid_argument("");
+    std::string errorMessege = "Слово \"" + eng + "\" не найдено";
+    throw std::invalid_argument(errorMessege);
   }
   TranslationEntry oldTe = words_.search(te);
   words_.remove(te);
@@ -56,7 +57,8 @@ void EngRusDict::addTranslation(std::string eng, std::string translation) {
 void EngRusDict::removeTranslation(std::string eng, std::string translation) {
   TranslationEntry te(eng);
   if (!words_.contains(te)) {
-    throw std::invalid_argument("");
+    std::string errorMessege = "Слово \"" + eng + "\" не найдено";
+    throw std::invalid_argument(errorMessege);
   }
   TranslationEntry oldTe = words_.search(te);
   words_.remove(te);

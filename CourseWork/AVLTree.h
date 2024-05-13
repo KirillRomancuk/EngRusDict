@@ -138,13 +138,6 @@ class AVLTree {
         node->right_ = insertRecursive(node->right_, value);
       }
     }
-    /*
-    else
-    {
-      throw std::invalid_argument("Inserting a duplicate into the AVLTree is not
-    allowed");
-    }
-    */
     node->height_ =
         1 + std::max(getHeight(node->left_), getHeight(node->right_));
 
@@ -332,7 +325,7 @@ class AVLTree {
 
   Node* searchRecursive(Node* node, const T& value) const {
     if (node == nullptr) {
-      throw std::invalid_argument("There is no specified element");
+      throw std::invalid_argument("Нет никакого указанного элемента");
     }
     if (node->data_ == value) {
       return node;

@@ -179,6 +179,6 @@ size_t cmd::subcmd::findIndexDict(MyVector<EngRusDict>& vector,
       return i;
     }
   }
-  std::string ErrorMessege = "Словарь не найден " + name;
-  throw std::runtime_error(ErrorMessege);
+  std::string errorMessege = "Словарь \"" + name + "\" не найден ";
+  throw std::runtime_error(errorMessege);
 }

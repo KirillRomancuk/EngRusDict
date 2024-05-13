@@ -32,7 +32,7 @@ class MyVector {
 
   void erase(size_t index) {
     if (index >= size_) {
-      throw std::out_of_range("Index out of range");
+      throw std::out_of_range("Индекс вне диапазона");
     }
 
     for (size_t i = index; i < size_ - 1; ++i) {
@@ -46,7 +46,7 @@ class MyVector {
 
   T& operator[](size_t index) {
     if (index >= size_) {
-      throw std::out_of_range("Index out of range");
+      throw std::out_of_range("Индекс вне диапазона");
     }
     return array_[index];
   }

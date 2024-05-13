@@ -7,7 +7,7 @@ TranslationEntry::TranslationEntry() {}
 TranslationEntry::TranslationEntry(const std::string& eng) {
   std::string lowerEng = getLettersToLower(eng);
   if (!containsOnlyEnglishLetters(lowerEng)) {
-    throw std::invalid_argument("Incorrect word format");
+    throw std::invalid_argument("Неверный формат английского слова");
   }
   english_ = lowerEng;
 }
@@ -27,7 +27,7 @@ size_t TranslationEntry::getCountTranslations() const {
 void TranslationEntry::addTranslation(const std::string& rus) {
   std::string lowerRus = getLettersToLower(rus);
   if (!containsOnlyRussianLetters(lowerRus)) {
-    throw std::invalid_argument("Incorrect word format");
+    throw std::invalid_argument("Неверный формат русского слова");
   }
   translations_.insert(lowerRus);
 }
@@ -35,21 +35,21 @@ void TranslationEntry::addTranslation(const std::string& rus) {
 void TranslationEntry::removeTranslation(const std::string& rus) {
   std::string lowerRus = getLettersToLower(rus);
   if (!containsOnlyRussianLetters(lowerRus)) {
-    throw std::invalid_argument("Incorrect word format");
+    throw std::invalid_argument("Неверный формат русского слова");
   }
   translations_.remove(lowerRus);
 }
 
 void TranslationEntry::addTranslations(const TranslationEntry& other) {
   if (english_ != other.english_) {
-    throw std::invalid_argument("Different english words");
+    throw std::invalid_argument("Разные значения английских слов");
   }
   translations_.addElements(other.translations_);
 }
 
 void TranslationEntry::removeTranslations(const TranslationEntry& other) {
   if (english_ != other.english_) {
-    throw std::invalid_argument("Different english words");
+    throw std::invalid_argument("Разные значения английских слов");
   }
   translations_.removeElements(other.translations_);
 }
@@ -57,7 +57,7 @@ void TranslationEntry::removeTranslations(const TranslationEntry& other) {
 TranslationEntry getIntersectionTranslations(const TranslationEntry& te1,
                                              const TranslationEntry& te2) {
   if (te1.english_ != te2.english_) {
-    throw std::invalid_argument("Different english words");
+    throw std::invalid_argument("Разные значения английских слов");
   }
   TranslationEntry result(te1.english_);
   result.translations_ =
@@ -68,7 +68,7 @@ TranslationEntry getIntersectionTranslations(const TranslationEntry& te1,
 TranslationEntry getDifferenceTranslations(const TranslationEntry& te1,
                                            const TranslationEntry& te2) {
   if (te1.english_ != te2.english_) {
-    throw std::invalid_argument("Different english words");
+    throw std::invalid_argument("Разные значения английских слов");
   }
   TranslationEntry result(te1.english_);
   result.translations_ =
