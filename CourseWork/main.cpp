@@ -31,6 +31,7 @@ namespace mapCommands {
       std::bind(cmd::getTranslation, std::ref(EngRusDicts), _1, _2);
     commands["readDicts"] = std::bind(cmd::readDicts, std::ref(EngRusDicts), _1);
     commands["display"] = std::bind(cmd::display, std::ref(EngRusDicts), _2);
+    commands["help"] = std::bind(cmd::help, _2);
     return commands;
   }
 }  // namespace mapCommands
@@ -45,7 +46,7 @@ int main() {
   while (true) {
     std::string command;
     std::cin >> command;
-    if (command == "exit") {
+    if (std::cin.eof()) {
       break;
     }
     try {

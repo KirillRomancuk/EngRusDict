@@ -19,6 +19,7 @@ namespace cmd // command
   void getTranslation(MyVector<EngRusDict>& vector, std::istream& in,
     std::ostream& out);
   void readDicts(MyVector<EngRusDict>& vector, std::istream& in);
+  void help(std::ostream& out);
   namespace subcmd {
     bool containsEngRusDict(MyVector<EngRusDict>& vector, std::string name);
   } // namespace subcmd

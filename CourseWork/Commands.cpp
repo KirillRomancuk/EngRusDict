@@ -5,11 +5,9 @@
 void cmd::createDict(MyVector<EngRusDict>& vector, std::istream& in) {
   std::string name;
   in >> name;
-  for (size_t i = 0; i < vector.getSize(); i++) {
-    if (vector[i].getName() == name) {
-      throw std::runtime_error(
-        "ѕопытка создани€ двух словарей с одинаковыми названи€ми");
-    }
+  if (subcmd::containsEngRusDict(vector, name)) {
+    throw std::runtime_error(
+      "ѕопытка создани€ двух словарей с одинаковыми названи€ми");
   }
   EngRusDict newErd(name);
   vector.push_back(newErd);
@@ -68,12 +66,12 @@ void cmd::remove(MyVector<EngRusDict>& vector, std::istream& in) {
         vector[i].removeTranslation(key, translation);
       }
       catch (const std::invalid_argument&) {
-        throw std::runtime_error("key не найден");
+        throw std::runtime_error("key не найден или не соответствует формату");
       }
     }
   }
   if (flag) {
-    throw std::runtime_error("—ловарь не найден");  // а если key не верный?
+    throw std::runtime_error("—ловарь не найден");
   }
 }
 
@@ -136,7 +134,7 @@ void cmd::getIntersection(MyVector<EngRusDict>& vector, std::istream& in) {
     }
   }
   if (flag) {
-    throw std::runtime_error("—ловарь не найден");  //
+    throw std::runtime_error("ќба или один из словарей не найден");
   }
 }
 
@@ -158,7 +156,7 @@ void cmd::getDifference(MyVector<EngRusDict>& vector, std::istream& in) {
     }
   }
   if (flag) {
-    throw std::runtime_error("—ловарь не найден");
+    throw std::runtime_error("ќба или один из словарей не найден");
   }
 }
 
@@ -206,15 +204,30 @@ void cmd::readDicts(MyVector<EngRusDict>& vector, std::istream& in) {
   std::cin >> pathToFile;
   MyVector<EngRusDict> newVector = ReadEngRusDictFromFile(pathToFile);
   for (size_t i = 0; i < newVector.getSize(); i++) {
-    if (!subcmd::containsEngRusDict(vector, newVector[i].getName()))
-    {
+    if (!subcmd::containsEngRusDict(vector, newVector[i].getName())) {
       vector.push_back(newVector[i]);
     }
   }
 }
 
-bool cmd::subcmd::containsEngRusDict(MyVector<EngRusDict>& vector, std::string name)
+void cmd::help(std::ostream& out)
 {
+  out << "1. createDict <new dictionary>\n";
+  out << "2. removeDict <dictionary>\n";
+  out << "3. add <dictionary> <english word> <translation>\n";
+  out << "4. remove <dictionary> <english word> <>/<translation>\n";
+  out << "5. addWords <dictionaryIn> <dictionaryOut>\n";
+  out << "6. getIntersection <new dictionary> <dictionaryOut> <dictionaryOut>\n";
+  out << "7. getDifference <new dictionary> <dictionaryOut> <dictionaryOut>\n";
+  out << "8. clear <dictionary>\n";
+  out << "9. getTranslation <english word>\n";
+  out << "10. readDicts <Path to the file>\n";
+  out << "11. display <>/<dictionary>\n";
+  out << "12. help\n";
+}
+
+bool cmd::subcmd::containsEngRusDict(MyVector<EngRusDict>& vector,
+  std::string name) {
   for (size_t i = 0; i < vector.getSize(); i++) {
     if (vector[i].getName() == name) {
       return true;
