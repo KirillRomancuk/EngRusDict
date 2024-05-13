@@ -67,22 +67,10 @@ void cmd::addWords(MyVector<EngRusDict>& vector, std::istream& in) {
 
 void cmd::removeWords(MyVector<EngRusDict>& vector, std::istream& in) {
   std::string nameFirstDict, nameSecondDict;
-  bool flag = true;
   in >> nameFirstDict >> nameSecondDict;
-  size_t size = vector.getSize();
-  for (size_t i = 0; i < size; i++) {
-    if (vector[i].getName() == nameFirstDict) {
-      for (size_t j = 0; j < size; j++) {
-        if (vector[j].getName() == nameSecondDict) {
-          vector[i].removeWordFromEngRusDict(vector[j]);
-          flag = false;
-        }
-      }
-    }
-  }
-  if (flag) {
-    throw std::runtime_error("Словарь не найден");
-  }
+  size_t i = subcmd::findIndexDict(vector, nameFirstDict);
+  size_t j = subcmd::findIndexDict(vector, nameSecondDict);
+  vector[i].removeWordFromEngRusDict(vector[j]);
 }
 
 void cmd::getIntersection(MyVector<EngRusDict>& vector, std::istream& in) {
