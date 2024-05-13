@@ -4,7 +4,7 @@
 #include "TranslationEntry.h"
 
 class EngRusDict {
- public:
+public:
   EngRusDict();
   EngRusDict(std::string name);
   EngRusDict(EngRusDict& other);
@@ -27,17 +27,17 @@ class EngRusDict {
   void removeWordFromEngRusDict(EngRusDict& other);
 
   friend EngRusDict getIntersectionWithEngRusDict(std::string name,
-                                                  EngRusDict& erd1,
-                                                  EngRusDict& erd2);
+    EngRusDict& erd1,
+    EngRusDict& erd2);
   friend EngRusDict getDifferenceWithEngRusDict(std::string name,
-                                                EngRusDict& erd1,
-                                                EngRusDict& erd2);
+    EngRusDict& erd1,
+    EngRusDict& erd2);
 
   void display(std::ostream& out);
 
   EngRusDict& operator=(const EngRusDict& other);
 
- private:
+private:
   std::string name_;
   AVLTree<TranslationEntry> words_;
 };

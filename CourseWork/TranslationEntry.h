@@ -4,7 +4,7 @@
 #include "AVLTree.h"
 
 class TranslationEntry {
- public:
+public:
   TranslationEntry();
   TranslationEntry(const std::string& eng);
   ~TranslationEntry();
@@ -20,9 +20,9 @@ class TranslationEntry {
   void removeTranslations(const TranslationEntry& other);
 
   friend TranslationEntry getIntersectionTranslations(
-      const TranslationEntry& te1, const TranslationEntry& te2);
+    const TranslationEntry& te1, const TranslationEntry& te2);
   friend TranslationEntry getDifferenceTranslations(
-      const TranslationEntry& te1, const TranslationEntry& te2);
+    const TranslationEntry& te1, const TranslationEntry& te2);
 
   bool operator<(const TranslationEntry& other) const;
   bool operator>(const TranslationEntry& other) const;
@@ -31,7 +31,7 @@ class TranslationEntry {
   friend std::ostream& operator<<(std::ostream& os, const TranslationEntry& te);
   friend std::istream& operator>>(std::istream& is, TranslationEntry& te);
 
- private:
+private:
   std::string english_;
   AVLTree<std::string> translations_;
 

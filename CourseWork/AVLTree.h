@@ -6,7 +6,7 @@
 
 template <class T>
 class AVLTree {
- public:
+public:
   AVLTree() : root_(nullptr) {}
 
   AVLTree(const AVLTree<T>& other) { root_ = deepCopy(other.root_); }
@@ -47,14 +47,14 @@ class AVLTree {
   size_t getHeight() const { return getHeight(root_); }
 
   friend AVLTree<T> getIntersectionTree(const AVLTree<T>& tree1,
-                                        const AVLTree<T>& tree2) {
+    const AVLTree<T>& tree2) {
     AVLTree<T> intersectionTree;
     getIntersectionTreeRecursive(tree1.root_, tree2, intersectionTree);
     return intersectionTree;
   }
 
   friend AVLTree<T> getDifferenceTree(const AVLTree<T>& tree1,
-                                      const AVLTree<T>& tree2) {
+    const AVLTree<T>& tree2) {
     AVLTree<T> differenceTree;
     getDifferenceTreeRecursive(tree1.root_, tree2, differenceTree);
     getDifferenceTreeRecursive(tree2.root_, tree1, differenceTree);
@@ -78,7 +78,7 @@ class AVLTree {
     displayHelper(root_, out, separator);
   }
 
- private:
+private:
   struct Node {
     T data_;
     Node* left_;
@@ -87,7 +87,7 @@ class AVLTree {
 
     Node() : left_(nullptr), right_(nullptr), height_(1) {}
     Node(const T& data)
-        : data_(data), left_(nullptr), right_(nullptr), height_(1) {}
+      : data_(data), left_(nullptr), right_(nullptr), height_(1) {}
   };
 
   friend std::ostream& operator<<(std::ostream& os, const Node* node) {
@@ -110,7 +110,8 @@ class AVLTree {
   Node* deepCopy(Node* node) {
     if (node == nullptr) {
       return nullptr;
-    } else {
+    }
+    else {
       Node* newNode = new Node;
       newNode->data_ = node->data_;
       newNode->left_ = deepCopy(node->left_);
@@ -128,13 +129,16 @@ class AVLTree {
     if (value < node->data_) {
       if (node->left_ == nullptr) {
         node->left_ = new Node(value);
-      } else {
+      }
+      else {
         node->left_ = insertRecursive(node->left_, value);
       }
-    } else if (value > node->data_) {
+    }
+    else if (value > node->data_) {
       if (node->right_ == nullptr) {
         node->right_ = new Node(value);
-      } else {
+      }
+      else {
         node->right_ = insertRecursive(node->right_, value);
       }
     }
@@ -146,7 +150,7 @@ class AVLTree {
     }
     */
     node->height_ =
-        1 + std::max(getHeight(node->left_), getHeight(node->right_));
+      1 + std::max(getHeight(node->left_), getHeight(node->right_));
 
     size_t balance = getBalance(node);
 
@@ -158,14 +162,14 @@ class AVLTree {
     }
     if (balance > 1 && node->left_ && value > node->left_->data_) {
       if (node->left_ && node->left_->left_ &&
-          value > node->left_->left_->data_) {
+        value > node->left_->left_->data_) {
         node->left_ = leftRotate(node->left_);
       }
       return rightRotate(node);
     }
     if (balance < -1 && node->right_ && value < node->right_->data_) {
       if (node->right_ && node->right_->right_ &&
-          value < node->right_->right_->data_) {
+        value < node->right_->right_->data_) {
         node->right_ = rightRotate(node->right_);
       }
       return leftRotate(node);
@@ -181,14 +185,17 @@ class AVLTree {
 
     if (value < node->data_) {
       node->left_ = removeRecursive(node->left_, value);
-    } else if (value > node->data_) {
+    }
+    else if (value > node->data_) {
       node->right_ = removeRecursive(node->right_, value);
-    } else {
+    }
+    else {
       if (node->left_ == nullptr) {
         Node* temp = node->right_;
         delete node;
         return temp;
-      } else if (node->right_ == nullptr) {
+      }
+      else if (node->right_ == nullptr) {
         Node* temp = node->left_;
         delete node;
         return temp;
@@ -200,7 +207,7 @@ class AVLTree {
     }
 
     node->height_ =
-        1 + std::max(getHeight(node->left_), getHeight(node->right_));
+      1 + std::max(getHeight(node->left_), getHeight(node->right_));
 
     size_t balance = getBalance(node);
 
@@ -243,7 +250,7 @@ class AVLTree {
       return 0;
     }
     return 1 + getCountElementsRecursive(node->left_) +
-           getCountElementsRecursive(node->right_);
+      getCountElementsRecursive(node->right_);
   }
 
   size_t getHeight(Node* node) const {
@@ -254,7 +261,7 @@ class AVLTree {
   }
 
   static void getIntersectionTreeRecursive(Node* node, const AVLTree<T>& tree,
-                                           AVLTree<T>& intersectionTree) {
+    AVLTree<T>& intersectionTree) {
     if (node != nullptr) {
       if (tree.contains(node->data_)) {
         intersectionTree.insert(node->data_);
@@ -265,7 +272,7 @@ class AVLTree {
   }
 
   static void getDifferenceTreeRecursive(Node* node, const AVLTree<T>& tree,
-                                         AVLTree<T>& differenceTree) {
+    AVLTree<T>& differenceTree) {
     if (node != nullptr) {
       if (!tree.contains(node->data_)) {
         differenceTree.insert(node->data_);
@@ -284,7 +291,7 @@ class AVLTree {
 
   Node* rightRotate(Node* node) {
     if (node == nullptr || node->left_ == nullptr ||
-        node->left_->right_ == nullptr) {
+      node->left_->right_ == nullptr) {
       return node;
     }
 
@@ -295,16 +302,16 @@ class AVLTree {
     node->left_ = newRightSubtree;
 
     node->height_ =
-        1 + std::max(getHeight(node->left_), getHeight(node->right_));
+      1 + std::max(getHeight(node->left_), getHeight(node->right_));
     nextLeftNode->height_ = 1 + std::max(getHeight(nextLeftNode->left_),
-                                         getHeight(nextLeftNode->right_));
+      getHeight(nextLeftNode->right_));
 
     return nextLeftNode;
   }
 
   Node* leftRotate(Node* node) {
     if (node == nullptr || node->right_ == nullptr ||
-        node->right_->left_ == nullptr) {
+      node->right_->left_ == nullptr) {
       return node;
     }
 
@@ -315,9 +322,9 @@ class AVLTree {
     node->right_ = newLeftSubtree;
 
     node->height_ =
-        1 + std::max(getHeight(node->left_), getHeight(node->right_));
+      1 + std::max(getHeight(node->left_), getHeight(node->right_));
     nextRightNode->height_ = 1 + std::max(getHeight(nextRightNode->left_),
-                                          getHeight(nextRightNode->right_));
+      getHeight(nextRightNode->right_));
 
     return nextRightNode;
   }
@@ -360,15 +367,17 @@ class AVLTree {
 
     if (value < node->data_) {
       return containsRecursive(node->left_, value);
-    } else if (value > node->data_) {
+    }
+    else if (value > node->data_) {
       return containsRecursive(node->right_, value);
-    } else {
+    }
+    else {
       return true;
     }
   }
 
   void displayHelper(const Node* node, std::ostream& out,
-                     std::string separator) const {
+    std::string separator) const {
     if (node != nullptr) {
       displayHelper(node->left_, out, separator);
       if (node->left_ != nullptr) {

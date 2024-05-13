@@ -55,24 +55,24 @@ void TranslationEntry::removeTranslations(const TranslationEntry& other) {
 }
 
 TranslationEntry getIntersectionTranslations(const TranslationEntry& te1,
-                                             const TranslationEntry& te2) {
+  const TranslationEntry& te2) {
   if (te1.english_ != te2.english_) {
     throw std::invalid_argument("Different english words");
   }
   TranslationEntry result(te1.english_);
   result.translations_ =
-      getIntersectionTree(te1.translations_, te2.translations_);
+    getIntersectionTree(te1.translations_, te2.translations_);
   return result;
 }
 
 TranslationEntry getDifferenceTranslations(const TranslationEntry& te1,
-                                           const TranslationEntry& te2) {
+  const TranslationEntry& te2) {
   if (te1.english_ != te2.english_) {
     throw std::invalid_argument("Different english words");
   }
   TranslationEntry result(te1.english_);
   result.translations_ =
-      getDifferenceTree(te1.translations_, te2.translations_);
+    getDifferenceTree(te1.translations_, te2.translations_);
   return result;
 }
 
@@ -106,7 +106,8 @@ std::istream& operator>>(std::istream& is, TranslationEntry& te) {
       rus.erase(0, 1);
       te.addTranslation(rus);
     }
-  } catch (std::invalid_argument& ex) {
+  }
+  catch (std::invalid_argument& ex) {
     is.setstate(std::ios::failbit);
     te = TranslationEntry();
   }

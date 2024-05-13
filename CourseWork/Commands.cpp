@@ -8,7 +8,7 @@ void cmd::createDict(MyVector<EngRusDict>& vector, std::istream& in) {
   for (size_t i = 0; i < vector.getSize(); i++) {
     if (vector[i].getName() == name) {
       throw std::runtime_error(
-          "Попытка создания двух словарей с одинаковыми названиями");
+        "Попытка создания двух словарей с одинаковыми названиями");
     }
   }
   EngRusDict newErd(name);
@@ -41,7 +41,8 @@ void cmd::add(MyVector<EngRusDict>& vector, std::istream& in) {
       in >> key >> translation;
       try {
         vector[i].addTranslation(key, translation);
-      } catch (const std::invalid_argument&) {
+      }
+      catch (const std::invalid_argument&) {
         TranslationEntry te(key);
         te.addTranslation(translation);
         vector[i].addWord(te);
@@ -65,7 +66,8 @@ void cmd::remove(MyVector<EngRusDict>& vector, std::istream& in) {
       flag = false;
       try {
         vector[i].removeTranslation(key, translation);
-      } catch (const std::invalid_argument&) {
+      }
+      catch (const std::invalid_argument&) {
         throw std::runtime_error("key не найден");
       }
     }
@@ -125,7 +127,7 @@ void cmd::getIntersection(MyVector<EngRusDict>& vector, std::istream& in) {
       for (size_t j = 0; j < size; j++) {
         if (vector[j].getName() == nameSecondDict) {
           EngRusDict newErd(
-              getIntersectionWithEngRusDict(name, vector[i], vector[j]));
+            getIntersectionWithEngRusDict(name, vector[i], vector[j]));
           vector.push_back(newErd);
           flag = false;
           break;
@@ -148,7 +150,7 @@ void cmd::getDifference(MyVector<EngRusDict>& vector, std::istream& in) {
       for (size_t j = 0; j < size; j++) {
         if (vector[j].getName() == nameSecondDict) {
           EngRusDict newErd(
-              getDifferenceWithEngRusDict(name, vector[i], vector[j]));
+            getDifferenceWithEngRusDict(name, vector[i], vector[j]));
           vector.push_back(newErd);
           flag = false;
         }
@@ -182,7 +184,7 @@ void cmd::display(MyVector<EngRusDict>& vector, std::ostream& out) {
 }
 
 void cmd::getTranslation(MyVector<EngRusDict>& vector, std::istream& in,
-                         std::ostream& out) {
+  std::ostream& out) {
   std::string key;
   std::cin >> key;
   AVLTree<std::string> result;
@@ -204,6 +206,19 @@ void cmd::readDicts(MyVector<EngRusDict>& vector, std::istream& in) {
   std::cin >> pathToFile;
   MyVector<EngRusDict> newVector = ReadEngRusDictFromFile(pathToFile);
   for (size_t i = 0; i < newVector.getSize(); i++) {
-    vector.push_back(newVector[i]);
+    if (!subcmd::containsEngRusDict(vector, newVector[i].getName()))
+    {
+      vector.push_back(newVector[i]);
+    }
   }
+}
+
+bool cmd::subcmd::containsEngRusDict(MyVector<EngRusDict>& vector, std::string name)
+{
+  for (size_t i = 0; i < vector.getSize(); i++) {
+    if (vector[i].getName() == name) {
+      return true;
+    }
+  }
+  return false;
 }

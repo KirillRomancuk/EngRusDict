@@ -25,7 +25,8 @@ AVLTree<std::string> EngRusDict::getTranslations(std::string eng) const {
   try {
     TranslationEntry te(eng);
     return words_.search(te).getTranslations();
-  } catch (const std::invalid_argument&) {
+  }
+  catch (const std::invalid_argument&) {
     return AVLTree<std::string>();
   }
 }
@@ -80,7 +81,7 @@ void EngRusDict::removeWordFromEngRusDict(EngRusDict& other) {
 
 void EngRusDict::display(std::ostream& out) {
   out << "Name of dict: \"" << name_ << "\" Words: " << getCountWords()
-      << ":\n";
+    << ":\n";
   words_.display(out, "\n");
   out << "\n";
 }
@@ -94,14 +95,14 @@ EngRusDict& EngRusDict::operator=(const EngRusDict& other) {
 }
 
 EngRusDict getIntersectionWithEngRusDict(std::string name, EngRusDict& erd1,
-                                         EngRusDict& erd2) {
+  EngRusDict& erd2) {
   EngRusDict result(name);
   result.words_ = getIntersectionTree(erd1.words_, erd2.words_);
   return result;
 }
 
 EngRusDict getDifferenceWithEngRusDict(std::string name, EngRusDict& erd1,
-                                       EngRusDict& erd2) {
+  EngRusDict& erd2) {
   EngRusDict result(name);
   result.words_ = getDifferenceTree(erd1.words_, erd2.words_);
   return result;
