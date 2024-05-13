@@ -236,13 +236,18 @@ void cmd::getTranslation(MyVector<EngRusDict>& vector, std::istream& in, std::os
   AVLTree< std::string > result;
   for (size_t i = 0; i < vector.getSize(); i++)
   {
-    result.addElements(vector[i].getTranslations(key));
+    AVLTree<std::string> tree = vector[i].getTranslations(key);
+    if (tree.getHeight() != 0)
+    {
+      result.addElements(tree);
+    }
   }
   if (result.getHeight() == 0)
   {
     throw std::runtime_error("Перевода слова не обнаружено");
   }
-  result.display();
+  result.display(out);
+  out << "\n";
 }
 
 void cmd::readDicts(MyVector<EngRusDict>& vector, std::istream& in)

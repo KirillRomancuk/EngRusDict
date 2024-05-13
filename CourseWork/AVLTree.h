@@ -102,9 +102,9 @@ public:
     return os;
   }
 
-  void display(std::string separator = ", ") const
+  void display(std::ostream& out, std::string separator = ", ") const
   {
-    displayHelper(root_, separator);
+    displayHelper(root_, out, separator);
   }
 
 private:
@@ -450,21 +450,21 @@ private:
     }
   }
 
-  void displayHelper(const Node* node, std::string separator) const
+  void displayHelper(const Node* node, std::ostream& out, std::string separator) const
   {
     if (node != nullptr)
     {
-      displayHelper(node->left_, separator);
+      displayHelper(node->left_, out,separator);
       if (node->left_ != nullptr)
       {
-        std::cout << separator;
+        out << separator;
       }
-      std::cout << node->data_;
+      out << node->data_;
       if (node->right_ != nullptr)
       {
-        std::cout << separator;
+        out << separator;
       }
-      displayHelper(node->right_, separator);
+      displayHelper(node->right_, out, separator);
     }
   }
 };
