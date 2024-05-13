@@ -1,6 +1,17 @@
 #include "EngRusDict.h"
 
+EngRusDict::EngRusDict()
+{
+  name_ = "";
+}
+
 EngRusDict::EngRusDict(std::string name) : name_(name) {}
+
+EngRusDict::EngRusDict(EngRusDict& other)
+{
+  name_ = other.name_;
+  words_ = other.words_;
+}
 
 EngRusDict::EngRusDict(EngRusDict&& other) noexcept
 {
@@ -31,7 +42,10 @@ size_t EngRusDict::getCountTranslations(std::string eng)
 
 void EngRusDict::addWord(const TranslationEntry& te)
 {
-  words_.insert(te);
+  if (te.getEnglishWord() != "")
+  {
+    words_.insert(te);
+  }
 }
 
 void EngRusDict::removeWord(std::string keyEng)
@@ -55,6 +69,16 @@ void EngRusDict::display()
   std::cout << "Name of dict: \"" << name_ << "\" Words: " << getCountWords() << ":\n";
   words_.display("\n");
   std::cout << "\n\n";
+}
+
+EngRusDict& EngRusDict::operator=(const EngRusDict& other)
+{
+    if (this != &other)
+    {
+      name_ = other.name_;
+      words_ = other.words_;
+    }
+    return *this;
 }
 
 EngRusDict getIntersectionWithEngRusDict(std::string name, EngRusDict& erd1, EngRusDict& erd2)

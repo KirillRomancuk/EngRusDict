@@ -1,5 +1,7 @@
 #include "TranslationEntry.h"
 
+#include <sstream>
+
 TranslationEntry::TranslationEntry()
 {
 }
@@ -107,6 +109,32 @@ std::ostream& operator<<(std::ostream& os, const TranslationEntry& te)
 {
   os << te.english_ << ": " << te.translations_;
   return os;
+}
+
+std::istream& operator>>(std::istream& is, TranslationEntry& te)
+{
+  std::istream::sentry sentry(is);
+  if (!sentry)
+  {
+    return is;
+  }
+  try
+  {
+    std::string eng, rus;
+    std::getline(is, eng, ':');
+    te = TranslationEntry(eng);
+    while (std::getline(is, rus, ',') && !rus.empty())
+    {
+      rus.erase(0, 1);
+      te.addTranslation(rus);
+    }
+  }
+  catch (std::invalid_argument& ex)
+  {
+    is.setstate(std::ios::failbit);
+    te = TranslationEntry();
+  }
+  return is;
 }
 
 bool TranslationEntry::containsOnlyEnglishLetters(const std::string& word)

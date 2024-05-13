@@ -6,9 +6,9 @@
 class EngRusDict
 {
 public:
-	EngRusDict() = delete;
+	EngRusDict();
 	EngRusDict(std::string name);
-	EngRusDict(EngRusDict& other) = delete;
+	EngRusDict(EngRusDict& other);
 	EngRusDict(EngRusDict&& other) noexcept;
 	~EngRusDict();
 	void clear();
@@ -26,6 +26,8 @@ public:
 	friend EngRusDict getDifferenceWithEngRusDict(std::string name, EngRusDict& erd1, EngRusDict& erd2);
 
 	void display();
+
+	EngRusDict& operator=(const EngRusDict& other);
 
 private:
   std::string name_;
