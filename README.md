@@ -74,66 +74,78 @@ WordPair:
 AVLTree:
 
 Приватные элементы:
-	struct Node
-	{
-	T data;
-	Node* left;
-	Node* right;
-	size_t height;
-	};
+	 struct Node
+	 {
+	   T data_;
+	   Node* left_;
+	   Node* right_;
+	   size_t height_;
 
-	friend std::ostream& operator<<(std::ostream& os, const Node* node);
+	   Node();
+	   Node(const T& data);
+	 };
 
-	Node* root_;
+	 Node* root_;
 
-	Node* deepCopy(Node* node);
+	 Node* deepCopy(Node* node);
 
-	Node* insertRecursive(Node* node, const T& value);
+	 Node* insertRecursive(Node* node, const T& value);
 
-	size_t getHeight(Node* node);
+	 Node* removeRecursive(Node* node, const T& value);
 
-	size_t getBalance(Node* node);
+	 void addElementsRecursive(Node* node);
 
-	Node* rightRotate(Node* node);
-	Node* leftRotate(Node* node);
+	 void removeElementsRecursive(Node* thisNode, Node* otherNode);
 
-	void removeSubTree(Node* node);
-	Node* searchRecursive(Node* node, const T& value);
-	Node* popRecursive(Node* node, const T& value);
+	 size_t getCountElementsRecursive(Node* node) const;
 
-	Node* minValueNode(Node* node);
-	bool containsRecursive(Node* node, const T& value) const;
-	static void mergeRecursive(AVLTree<T>& mergedTree, Node* node); ???
+	 size_t getHeight(Node* node) const;
 
-	void display(Node* root, int space);
+	 static void getIntersectionTreeRecursive(Node* node, const AVLTree< T >& tree, AVLTree< T >& intersectionTree);
+
+	 static void getDifferenceTreeRecursive(Node* node, const AVLTree< T >& tree, AVLTree< T >& differenceTree);
+
+	 size_t getBalance(Node* node) const;
+
+	 Node* rightRotate(Node* node);
+
+	 Node* leftRotate(Node* node);
+
+	 void removeSubTree(Node* node);
+
+	 Node* searchRecursive(Node* node, const T& value) const;
+
+	 Node* getMinValueNode(Node* node) const;
+
+	 bool containsRecursive(Node* node, const T& value) const;
 
 
 Публичные элементы:
 
-	AVLTree();
-	AVLTree(const AVLTree< T >& other);
-	AVLTree(AVLTree< T >&& other) noexcept;
-	~AVLTree();
+	 AVLTree() : root_(nullptr) {}
+	 AVLTree(const AVLTree< T other);
+	 AVL(AVLTree< T >&& other) : root_(other.root_);
+	 ~AVLTree();
+	 
+	 void clear();
+	 void insert(const T& value);
+	 void remove(const& value);
+	 void addElements(const AVLTree< T >& other);
+	 void removeElements(const AVLTree< T >& other);
 
-	void insert(const T& value);
-	void pop(const T& value);
-	void addElements(const AVLTree< T >& other);
-	void removeElements(const AVLTree< T >& other);
+	 bool contains(const T& value) const;
+	 T search(const T& value) const;
 
-	void clear();
-	bool contains(const T& value) const;
+	 size_t getCountElements() const;
+	 size_t getHeight() const;
 
-	size_t getHeight();
-	size_t countElements();
+	 friend AVLTree< T > getIntersectionTree(const AVLTree< T >& tree1, const AVLTree< T >& tree2);
+	 friend AVLTree< T > getDifferenceTree(const AVLTree< T >& tree1, const AVLTree< T >& tree2);
 
-	friend AVLTree<T> getIntersectionTree(const AVLTree<T>& tree1, const AVLTree<T>& tree2);
-	friend AVLTree<T> getDifferenceTree(const AVLTree<T>& tree1, const AVLTree<T>& tree2);
+	 AVLTree< T >& operator=(const AVLTree< T >& other);
 
-	AVLTree<T>& operator=(const AVLTree<T>& other);
-
-	friend std::ostream& operator<<(std::ostream& os, const AVLTree< T >& tree);
-
-	void display();
+	 friend std::ostream& operator<<(std::ostream& os, const AVL< T >& tree);
+	 void display() const;
 
 DictionaryList:
 
