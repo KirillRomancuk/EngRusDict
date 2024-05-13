@@ -46,6 +46,7 @@ int main() {
   std::map<std::string, std::function<void(std::istream&, std::ostream&)> >
       commands;
   commands = mapCommands::createMapOfCommands(EngRusDicts, std::cin, std::cout);
+  commands["help"](std::cin, std::cout);
   while (true) {
     std::string command;
     std::cin >> command;
