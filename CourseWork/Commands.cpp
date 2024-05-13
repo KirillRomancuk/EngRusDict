@@ -101,16 +101,7 @@ void cmd::getDifference(MyVector<EngRusDict>& vector, std::istream& in) {
 void cmd::clear(MyVector<EngRusDict>& vector, std::istream& in) {
   std::string name;
   in >> name;
-  bool flag = true;
-  for (size_t i = 0; i < vector.getSize(); i++) {
-    if (vector[i].getName() == name) {
-      vector[i].clear();
-      flag = false;
-    }
-  }
-  if (flag) {
-    throw std::runtime_error("Словарь не найден");
-  }
+  vector[subcmd::findIndexDict(vector, name)].clear();
 }
 
 void cmd::display(MyVector<EngRusDict>& vector, std::ostream& out) {
