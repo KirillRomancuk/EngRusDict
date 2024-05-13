@@ -8,26 +8,21 @@
 #include "EngRusDict.h"
 #include "MyVector.h"
 
-MyVector< EngRusDict > ReadEngRusDictFromFile(std::string pathToFile)
-{
+MyVector<EngRusDict> ReadEngRusDictFromFile(std::string pathToFile) {
   std::ifstream file(pathToFile);
-  if (!file.is_open())
-  {
+  if (!file.is_open()) {
     std::cout << "Error opening file" << std::endl;
   }
-  MyVector< EngRusDict > EngRusDicts;
+  MyVector<EngRusDict> EngRusDicts;
   std::string name;
-  while (getline(file, name))
-  {
+  while (getline(file, name)) {
     EngRusDict newErd(name);
     std::string words;
-    while (std::getline(file, words) && !words.empty())
-    {
+    while (std::getline(file, words) && !words.empty()) {
       std::stringstream ss(words);
       TranslationEntry te;
       ss >> te;
-      if (ss.fail() && !ss.eof())
-      {
+      if (ss.fail() && !ss.eof()) {
         ss.clear();
         ss.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
       }
@@ -39,4 +34,4 @@ MyVector< EngRusDict > ReadEngRusDictFromFile(std::string pathToFile)
   return EngRusDicts;
 }
 
-#endif // !READFROMFILE_H
+#endif  // !READFROMFILE_H
