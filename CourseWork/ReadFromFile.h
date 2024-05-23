@@ -4,16 +4,13 @@
 #include <fstream>
 #include <sstream>
 #include <string>
-#include <locale>
-#include <codecvt>
 
 #include "EngRusDict.h"
 #include "MyVector.h"
 
 AVLTree< std::string, EngRusDict > ReadEngRusDictFromFile(std::string pathToFile)
 {
-  std::wifstream file(pathToFile);
-  file.imbue(std::locale(file.getloc(), new std::codecvt_utf8< wchar_t >));
+  std::ifstream file(pathToFile);
   if (!file.is_open())
   {
     throw std::invalid_argument("Не удалось открыть файл");

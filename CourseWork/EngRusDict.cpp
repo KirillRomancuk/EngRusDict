@@ -60,10 +60,6 @@ void EngRusDict::addTranslation(const std::string& eng, const std::string& trans
     std::string errorMessege = "Слово \"" + eng + "\" не найдено";
     throw std::invalid_argument(errorMessege);
   }
-  if (!containsOnlyRussianLetters(translation))
-  {
-    throw std::invalid_argument("");
-  }
   MyVector< std::string >& translations = words_.at(eng);
   translations.push_back(getLettersToLower(translation));
   std::sort(translations.begin(), translations.end());
@@ -82,10 +78,6 @@ void EngRusDict::removeTranslation(const std::string& eng, const std::string& tr
 
 void EngRusDict::addWord(const std::string& eng)
 {
-  if (!containsOnlyEnglishLetters(eng))
-  {
-    throw std::invalid_argument("");
-  }
   words_.insert(getLettersToLower(eng), MyVector< std::string >());
 }
 
@@ -122,14 +114,45 @@ EngRusDict& EngRusDict::operator=(const EngRusDict& other)
 EngRusDict getIntersectionWithEngRusDict(EngRusDict& erd1, EngRusDict& erd2)
 {
   EngRusDict result;
-  result.words_ = getIntersectionTree(erd1.words_, erd2.words_);
+  for (std::string& key : erd2.words_.getAllKeys())
+  {
+    if (erd1.words_.contains(key))
+    {
+      result.addWord(key);
+      for (std::string& translation : getIntersectionVector(erd1.words_.at(key), erd2.words_.at(key)))
+      {
+        result.addTranslation(key, translation);
+      }
+    }
+  }
   return result;
 }
 
 EngRusDict getDifferenceWithEngRusDict(EngRusDict& erd1, EngRusDict& erd2)
 {
   EngRusDict result;
-  result.words_ = getDifferenceTree(erd1.words_, erd2.words_);
+  for (std::string& key : erd2.words_.getAllKeys())
+  {
+    if (!erd1.words_.contains(key))
+    {
+      result.addWord(key);
+      for (std::string& translation : erd2.words_.at(key))
+      {
+        result.addTranslation(key, translation);
+      }
+    }
+  }
+  for (std::string& key : erd1.words_.getAllKeys())
+  {
+    if (!erd2.words_.contains(key))
+    {
+      result.addWord(key);
+      for (std::string& translation : erd1.words_.at(key))
+      {
+        result.addTranslation(key, translation);
+      }
+    }
+  }
   return result;
 }
 
@@ -137,32 +160,4 @@ std::string EngRusDict::getLettersToLower(std::string word)
 {
   std::transform(word.begin(), word.end(), word.begin(), std::bind(std::tolower, std::placeholders::_1));
   return word;
-}
-
-bool EngRusDict::containsOnlyRussianLetters(const std::string& word) const
-{
-  bool result = true;
-  for (const char& c : word)
-  {
-    if (!(c >= 'a' && c <= 'я' || c >= 'А' && c <= 'Я'))
-    {
-      result = false;
-      break;
-    }
-  }
-  return result;
-}
-
-bool EngRusDict::containsOnlyEnglishLetters(const std::string& word) const
-{
-  bool result = true;
-  for (const char& c : word)
-  {
-    if (!(c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z'))
-    {
-      result = false;
-      break;
-    }
-  }
-  return result;
 }

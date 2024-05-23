@@ -451,7 +451,7 @@ private:
       {
         out << separator;
       }
-      out << node->data_;
+      out << node->key_ << ": " << node->data_;
       if (node->right_ != nullptr)
       {
         out << separator;

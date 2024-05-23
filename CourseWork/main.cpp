@@ -41,8 +41,8 @@ using mapCmd =
 }  // namespace mapCommands
 /*
 11 Input.txt
-12 ALL
- 
+10 book
+^Z
 */
 int main() {
   system("chcp 1251");

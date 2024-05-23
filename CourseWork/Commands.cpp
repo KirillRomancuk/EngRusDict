@@ -121,7 +121,7 @@ void cmd::display(AVLTree< std::string, EngRusDict >& vector, std::istream& in, 
   {
     for (const std::string& key : vector.getAllKeys())
     {
-      out << "Name: \"" << key << "\"\tWords: " << vector.at(key).getCountWords() << ":\n";
+      out << "Dictionary Name: \"" << key << "\"  Words: " << vector.at(key).getCountWords() << ":\n";
       vector.at(key).display(out);
     }
   }
@@ -140,7 +140,7 @@ void cmd::getTranslation(AVLTree< std::string, EngRusDict >& vector, std::istrea
   {
     for (const std::string& translation : vector.at(name).getTranslations(key))
     {
-      if (translation != "" && std::find(result.begin(), result.end(), translation) == result.end())
+      if (translation != "" && !result.contains(translation))
       {
         result.push_back(translation);
       }

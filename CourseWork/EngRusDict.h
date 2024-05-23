@@ -38,8 +38,6 @@ private:
   AVLTree< std::string, MyVector< std::string > > words_;
 
   std::string getLettersToLower(std::string word);
-  bool containsOnlyRussianLetters(std::string word);
-  bool containsOnlyEnglishLetters(const std::string& word) const;
 };
 
 #endif  // !ENGRUSDICT_H

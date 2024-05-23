@@ -20,6 +20,27 @@ public:
     capacity_(0)
   {}
 
+    MyVector(const MyVector& other):
+    size_(other.size_),
+    capacity_(other.size_)
+  {
+    array_ = new T[capacity_];
+    for (size_t i = 0; i < size_; ++i)
+    {
+      array_[i] = other.array_[i];
+    }
+  }
+
+  MyVector(MyVector&& other) noexcept:
+    array_(other.array_),
+    size_(other.size_),
+    capacity_(other.capacity_)
+  {
+    other.array_ = nullptr;
+    other.size_ = 0;
+    other.capacity_ = 0;
+  }
+
   ~MyVector()
   {
     delete[] array_;
@@ -55,6 +76,19 @@ public:
 
     size_--;
   }
+
+  bool contains(const T& value) const
+  {
+    for (size_t i = 0; i < size_; ++i)
+    {
+      if (array_[i] == value)
+      {
+        return true;
+      }
+    }
+    return false;
+  }
+
 
   size_t getSize() const
   {
@@ -106,18 +140,6 @@ public:
     return size_;
   }
 
-  bool contains(const T& value) const
-  {
-    for (size_t i = 0; i < size_; ++i)
-    {
-      if (array_[i] == value)
-      {
-        return true; // Если элемент найден, возвращаем true
-      }
-    }
-    return false; // Если элемент не найден, возвращаем false
-  }
-
   MyVector& operator=(const MyVector& other)
   {
     if (this != &other)
@@ -134,6 +156,7 @@ public:
     return *this;
   }
 
+
   friend std::ostream& operator<<(std::ostream& out, const MyVector< T >& vector)
   {
     for (size_t i = 0; i < vector.getSize(); i++)
@@ -143,5 +166,19 @@ public:
     return out;
   }
 };
+
+template < class T >
+MyVector< T > getIntersectionVector(const MyVector< T >& vector1, const MyVector< T >& vector2)
+{
+  MyVector< T > intersection;
+  for (size_t i = 0; i < vector1.getSize(); ++i)
+  {
+    if (vector2.contains(vector1[i]))
+    {
+      intersection.push_back(vector1[i]);
+    }
+  }
+  return intersection;
+}
 
 #endif // MYVECTOR_H
