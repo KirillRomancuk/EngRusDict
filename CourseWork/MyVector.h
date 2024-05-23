@@ -13,6 +13,52 @@ class MyVector {
   const int CAPACITY_CHANGE_FACTOR_ = 2;
 
  public:
+  class Iterator
+  {
+  private:
+    T* ptr_;
+
+  public:
+    Iterator(T* ptr):
+      ptr_(ptr)
+    {}
+    T& operator*()
+    {
+      return *ptr_;
+    }
+    Iterator& operator++()
+    {
+      ++ptr_;
+      return *this;
+    }
+    bool operator!=(const Iterator& other) const
+    {
+      return ptr_ != other.ptr_;
+    }
+  };
+
+  Iterator find(const T& value)
+  {
+    for (T* ptr = array_; ptr != array_ + size_; ++ptr)
+    {
+      if (*ptr == value)
+      {
+        return Iterator(ptr);
+      }
+    }
+    return Iterator(array_ + size_);
+  }
+
+  Iterator begin()
+  {
+    return Iterator(array_);
+  }
+
+  Iterator end()
+  {
+    return Iterator(array_ + size_);
+  }
+
   MyVector() : array_(nullptr), size_(0), capacity_(0) {}
 
   ~MyVector() { delete[] array_; }
@@ -30,18 +76,19 @@ class MyVector {
     array_[size_++] = value;
   }
 
-  void erase(size_t index) {
-    if (index >= size_) {
-      throw std::out_of_range("Индекс вне диапазона");
+  void erase(const Iterator& it)
+  {
+    if (it == end())
+    {
+      throw std::out_of_range("Предпринята попытка удалить итератор end()");
     }
-
-    for (size_t i = index; i < size_ - 1; ++i) {
-      array_[i] = array_[i + 1];
+    T* ptr = &(*it);
+    for (T* i = ptr; i != array_ + size_ - 1; ++i)
+    {
+      *i = *(i + 1);
     }
-
-    size_--;
+    --size_;
   }
-
   size_t getSize() const { return size_; }
 
   T& operator[](size_t index) {
@@ -52,10 +99,6 @@ class MyVector {
   }
 
   void clear() { size_ = 0; }
-
-  T* begin() { return array_; }
-
-  T* end() { return array_ + size_; }
 };
 
 #endif  // !MYVECTOR_H

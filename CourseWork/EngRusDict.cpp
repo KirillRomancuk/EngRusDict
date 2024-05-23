@@ -1,28 +1,17 @@
 #include "EngRusDict.h"
 
+#include <functional>
+
 EngRusDict::EngRusDict()
-{
-  name_ = "";
-}
+{}
 
-EngRusDict::EngRusDict(std::string name)
+EngRusDict::EngRusDict(const EngRusDict& other)
 {
-  if (name == "ALL")
-  {
-    throw std::invalid_argument("Невозможно создать словарь с именем \"ALL\"");
-  }
-  name_ = name;
-}
-
-EngRusDict::EngRusDict(EngRusDict& other)
-{
-  name_ = other.name_;
   words_ = other.words_;
 }
 
 EngRusDict::EngRusDict(EngRusDict&& other) noexcept
 {
-  name_ = std::move(other.name_);
   words_ = std::move(other.words_);
   other.clear();
 }
@@ -35,75 +24,70 @@ void EngRusDict::clear()
   words_.clear();
 }
 
-std::string EngRusDict::getName() const
-{
-  return name_;
-}
-
-AVLTree< std::string, std::string> EngRusDict::getTranslations(std::string eng) const
+MyVector< std::string > EngRusDict::getTranslations(const std::string& eng) const
 {
   try
   {
-    TranslationEntry te(eng);
-    return words_.search(te).getTranslations();
+    return words_.at(eng);
   }
   catch (const std::invalid_argument&)
   {
-    return AVLTree< std::string >();
+    return MyVector<std::string>();
   }
 }
 
-size_t EngRusDict::getCountWords()
+size_t EngRusDict::getCountWords() const
 {
-  return words_.getCountElements();
+  return words_.size();
 }
 
-size_t EngRusDict::getCountTranslations(std::string eng)
+size_t EngRusDict::getCountTranslations(const std::string& eng) const
 {
-  TranslationEntry te(eng);
-  return words_.search(te).getCountTranslations();
+  try
+  {
+    return words_.at(eng).getSize();
+  }
+  catch (const std::invalid_argument&)
+  {
+    return 0;
+  }
 }
 
-void EngRusDict::addTranslation(std::string eng, std::string translation)
+void EngRusDict::addTranslation(const std::string& eng, const std::string& translation)
 {
-  TranslationEntry te(eng);
-  if (!words_.contains(te))
+  if (!words_.contains(eng))
   {
     std::string errorMessege = "Слово \"" + eng + "\" не найдено";
     throw std::invalid_argument(errorMessege);
   }
-  TranslationEntry oldTe = words_.search(te);
-  words_.remove(te);
-  oldTe.addTranslation(translation);
-  words_.insert(oldTe);
+  MyVector< std::string >& translations = words_.at(eng);
+  translations.push_back(translation);
+  std::sort(translations.begin(), translations.end());
 }
 
-void EngRusDict::removeTranslation(std::string eng, std::string translation)
+void EngRusDict::removeTranslation(const std::string& eng, const std::string& translation)
 {
-  TranslationEntry te(eng);
-  if (!words_.contains(te))
+  if (!words_.contains(eng))
   {
     std::string errorMessege = "Слово \"" + eng + "\" не найдено";
     throw std::invalid_argument(errorMessege);
   }
-  TranslationEntry oldTe = words_.search(te);
-  words_.remove(te);
-  oldTe.removeTranslation(translation);
-  words_.insert(oldTe);
+  MyVector< std::string >& translations = words_.at(eng);
+  translations.erase(translations.find(translation));
 }
 
-void EngRusDict::addWord(const TranslationEntry& te)
+void EngRusDict::addWord(const std::string& eng)
 {
-  if (te.getEnglishWord() != "")
+  if (!containsOnlyEnglishLetters(eng))
   {
-    words_.insert(te);
+    throw std::invalid_argument("");
   }
+  words_.insert(eng, MyVector< std::string >());
 }
 
-void EngRusDict::removeWord(std::string keyEng)
+void EngRusDict::removeWord(const std::string& eng)
 {
-  TranslationEntry te(keyEng);
-  words_.remove(te);
+  words_.remove(eng);
 }
 
 void EngRusDict::addWordFromEngRusDict(EngRusDict& other)
@@ -116,9 +100,8 @@ void EngRusDict::removeWordFromEngRusDict(EngRusDict& other)
   words_.removeElements(other.words_);
 }
 
-void EngRusDict::display(std::ostream& out)
+void EngRusDict::display(std::ostream& out) const
 {
-  out << "Name of dict: \"" << name_ << "\" Words: " << getCountWords() << ":\n";
   words_.display(out, "\n");
   out << "\n";
 }
@@ -127,22 +110,55 @@ EngRusDict& EngRusDict::operator=(const EngRusDict& other)
 {
   if (this != &other)
   {
-    name_ = other.name_;
     words_ = other.words_;
   }
   return *this;
 }
 
-EngRusDict getIntersectionWithEngRusDict(std::string name, EngRusDict& erd1, EngRusDict& erd2)
+EngRusDict getIntersectionWithEngRusDict(EngRusDict& erd1, EngRusDict& erd2)
 {
-  EngRusDict result(name);
+  EngRusDict result;
   result.words_ = getIntersectionTree(erd1.words_, erd2.words_);
   return result;
 }
 
-EngRusDict getDifferenceWithEngRusDict(std::string name, EngRusDict& erd1, EngRusDict& erd2)
+EngRusDict getDifferenceWithEngRusDict(EngRusDict& erd1, EngRusDict& erd2)
 {
-  EngRusDict result(name);
+  EngRusDict result;
   result.words_ = getDifferenceTree(erd1.words_, erd2.words_);
+  return result;
+}
+
+std::string EngRusDict::getLettersToLower(std::string word)
+{
+  std::transform(word.begin(), word.end(), word.begin(), std::bind(std::tolower, std::placeholders::_1));
+  return word;
+}
+
+bool EngRusDict::containsOnlyRussianLetters(const std::string& word) const
+{
+  bool result = true;
+  for (const char& c : word)
+  {
+    if (!(c >= 'a' && c <= 'я' || c >= 'А' && c <= 'Я'))
+    {
+      result = false;
+      break;
+    }
+  }
+  return result;
+}
+
+bool EngRusDict::containsOnlyEnglishLetters(const std::string& word) const
+{
+  bool result = true;
+  for (const char& c : word)
+  {
+    if (!(c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z'))
+    {
+      result = false;
+      break;
+    }
+  }
   return result;
 }

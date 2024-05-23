@@ -49,11 +49,11 @@ public:
   {
     removeElementsRecursive(other.root_);
   }
-  bool find(const S& key) const
+  bool contains(const S& key) const
   {
     return containsRecursive(root_, key);
   }
-  T at(const S& key) const
+  T& at(const S& key) const
   {
     return at(root_, key)->data_;
   }
@@ -67,14 +67,14 @@ public:
   }
   friend AVLTree< S, T > getIntersectionTree(const AVLTree< S, T >& tree1, const AVLTree< S, T >& tree2)
   {
-    AVLTree< T > intersectionTree;
+    AVLTree< S, T > intersectionTree;
     getIntersectionTreeRecursive(tree1.root_, tree2, intersectionTree);
     getIntersectionTreeRecursive(tree2.root_, tree1, intersectionTree);
     return intersectionTree;
   }
   friend AVLTree< S, T > getDifferenceTree(const AVLTree< S, T >& tree1, const AVLTree< S, T >& tree2)
   {
-    AVLTree< T > differenceTree;
+    AVLTree< S, T > differenceTree;
     getDifferenceTreeRecursive(tree1.root_, tree2, differenceTree);
     getDifferenceTreeRecursive(tree2.root_, tree1, differenceTree);
     return differenceTree;
@@ -303,7 +303,7 @@ private:
   {
     if (node != nullptr)
     {
-      if (tree.find(node->key_))
+      if (tree.contains(node->key_))
       {
         intersectionTree.insert(node->key_);
       }
@@ -316,7 +316,7 @@ private:
   {
     if (node != nullptr)
     {
-      if (!tree.find(node->key_))
+      if (!tree.contains(node->key_))
       {
         differenceTree.insert(node->key_);
       }
