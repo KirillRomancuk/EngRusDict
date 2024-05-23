@@ -4,6 +4,8 @@
 #include <algorithm>
 #include <iostream>
 
+#include "MyVector.h"
+
 template < class S, class T >
 class AVLTree
 {
@@ -96,6 +98,13 @@ public:
   void display(std::ostream& out, std::string separator = ", ") const
   {
     displayHelper(root_, out, separator);
+  }
+
+  MyVector< S > getAllKeys() const
+  {
+    MyVector< S > keys;
+    getAllRecursive(root_, keys);
+    return keys;
   }
 
 private:
@@ -305,7 +314,7 @@ private:
     {
       if (tree.contains(node->key_))
       {
-        intersectionTree.insert(node->key_);
+        intersectionTree.insert(node->key_, node->data_);
       }
       getIntersectionTreeRecursive(node->left_, tree, intersectionTree);
       getIntersectionTreeRecursive(node->right_, tree, intersectionTree);
@@ -318,7 +327,7 @@ private:
     {
       if (!tree.contains(node->key_))
       {
-        differenceTree.insert(node->key_);
+        differenceTree.insert(node->key_, node->data_);
       }
       getDifferenceTreeRecursive(node->left_, tree, differenceTree);
       getDifferenceTreeRecursive(node->right_, tree, differenceTree);
@@ -433,7 +442,7 @@ private:
     }
   }
 
-  void displayHelper(const Node* node, std::ostream& out, std::string separator) const
+  void displayHelper(const Node* node, std::ostream& out, const std::string& separator) const
   {
     if (node != nullptr)
     {
@@ -448,6 +457,16 @@ private:
         out << separator;
       }
       displayHelper(node->right_, out, separator);
+    }
+  }
+
+  void getAllRecursive(const Node* node, MyVector< S >& keys) const
+  {
+    if (node != nullptr)
+    {
+      getAllRecursive(node->left_, keys);
+      keys.push_back(node->key_);
+      getAllRecursive(node->right_, keys);
     }
   }
 };

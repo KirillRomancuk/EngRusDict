@@ -60,8 +60,12 @@ void EngRusDict::addTranslation(const std::string& eng, const std::string& trans
     std::string errorMessege = "Слово \"" + eng + "\" не найдено";
     throw std::invalid_argument(errorMessege);
   }
+  if (!containsOnlyRussianLetters(translation))
+  {
+    throw std::invalid_argument("");
+  }
   MyVector< std::string >& translations = words_.at(eng);
-  translations.push_back(translation);
+  translations.push_back(getLettersToLower(translation));
   std::sort(translations.begin(), translations.end());
 }
 
@@ -73,7 +77,7 @@ void EngRusDict::removeTranslation(const std::string& eng, const std::string& tr
     throw std::invalid_argument(errorMessege);
   }
   MyVector< std::string >& translations = words_.at(eng);
-  translations.erase(translations.find(translation));
+  translations.erase(translations.findIndexElement(translation));
 }
 
 void EngRusDict::addWord(const std::string& eng)
@@ -82,7 +86,7 @@ void EngRusDict::addWord(const std::string& eng)
   {
     throw std::invalid_argument("");
   }
-  words_.insert(eng, MyVector< std::string >());
+  words_.insert(getLettersToLower(eng), MyVector< std::string >());
 }
 
 void EngRusDict::removeWord(const std::string& eng)

@@ -4,31 +4,57 @@
 #include <fstream>
 #include <sstream>
 #include <string>
+#include <locale>
+#include <codecvt>
 
 #include "EngRusDict.h"
 #include "MyVector.h"
 
-MyVector<EngRusDict> ReadEngRusDictFromFile(std::string pathToFile) {
-  std::ifstream file(pathToFile);
-  if (!file.is_open()) {
-    throw std::invalid_argument("Ошибка при чтении файла");
+AVLTree< std::string, EngRusDict > ReadEngRusDictFromFile(std::string pathToFile)
+{
+  std::wifstream file(pathToFile);
+  file.imbue(std::locale(file.getloc(), new std::codecvt_utf8< wchar_t >));
+  if (!file.is_open())
+  {
+    throw std::invalid_argument("Не удалось открыть файл");
   }
-  MyVector<EngRusDict> EngRusDicts;
+  AVLTree< std::string, EngRusDict > EngRusDicts;
   std::string name;
-  while (getline(file, name)) {
-    EngRusDict newErd(name);
-    std::string words;
-    while (std::getline(file, words) && !words.empty()) {
-      std::stringstream ss(words);
-      TranslationEntry te;
-      ss >> te;
-      if (ss.fail() && !ss.eof()) {
-        ss.clear();
-        ss.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-      }
-      newErd.addWord(te);
+  while (getline(file, name))
+  {
+    if (EngRusDicts.contains(name))
+    {
+      throw std::invalid_argument("Словарь уже внесён в список");
     }
-    EngRusDicts.push_back(newErd);
+    EngRusDict newErd;
+    std::string words;
+    while (std::getline(file, words) && !words.empty())
+    {
+      std::stringstream ss(words);
+      std::string eng, rus;
+      std::getline(ss, eng, ':');
+      try
+      {
+        newErd.addWord(eng);
+      }
+      catch (const std::invalid_argument&)
+      {
+        continue;
+      }
+      try
+      {
+        while (std::getline(ss, rus, ',') && !rus.empty())
+        {
+          rus.erase(0, 1);
+          newErd.addTranslation(eng, rus);
+        }
+      }
+      catch (const std::invalid_argument&)
+      {
+        newErd.removeWord(eng);
+      }
+    }
+    EngRusDicts.insert(name, newErd);
   }
   file.close();
   return EngRusDicts;

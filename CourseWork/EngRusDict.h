@@ -38,7 +38,7 @@ private:
   AVLTree< std::string, MyVector< std::string > > words_;
 
   std::string getLettersToLower(std::string word);
-  bool containsOnlyRussianLetters(const std::string& word) const;
+  bool containsOnlyRussianLetters(std::string word);
   bool containsOnlyEnglishLetters(const std::string& word) const;
 };
 
