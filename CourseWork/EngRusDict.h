@@ -13,7 +13,7 @@ class EngRusDict {
   void clear();
 
   std::string getName() const;
-  AVLTree<std::string> getTranslations(std::string eng) const;
+  AVLTree< std::string, std::string > getTranslations(std::string eng) const;
 
   size_t getCountWords();
   size_t getCountTranslations(std::string eng);
@@ -39,7 +39,7 @@ class EngRusDict {
 
  private:
   std::string name_;
-  AVLTree<TranslationEntry> words_;
+   AVLTree< std::string, std::string > words_;
 };
 
 #endif  // !ENGRUSDICT_H
