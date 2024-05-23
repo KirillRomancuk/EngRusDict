@@ -6,17 +6,17 @@
 
 #include "MyVector.h"
 
-template < class S, class T >
+template < class Key, class Value >
 class AVLTree
 {
 public:
   AVLTree():
     root_(nullptr){};
 
-  AVLTree(const AVLTree< S, T >& other):
-    root_(deepCopy(other.root_)){};
+  AVLTree(const AVLTree< Key, Value >& other):
+    root_(deepCopyNode(other.root_)){};
 
-  AVLTree(AVLTree< S, T >&& other) noexcept:
+  AVLTree(AVLTree< Key, Value >&& other) noexcept:
     root_(other.root_)
   {
     other.root_ = nullptr;
@@ -33,76 +33,70 @@ public:
     root_ = nullptr;
   }
 
-  void insert(const S& key, const T& value)
+  void insert(const Key& key, const Value& value)
   {
     root_ = insertRecursive(root_, key, value);
   }
 
-  void remove(const S& key)
+  void remove(const Key& key)
   {
     root_ = removeRecursive(root_, key);
   }
 
-  void addElements(const AVLTree< S, T >& other)
+  void addElements(const AVLTree< Key, Value >& other)
   {
     addElementsRecursive(other.root_);
   }
-  void removeElements(const AVLTree< S, T >& other)
+
+  void removeElements(const AVLTree< Key, Value >& other)
   {
     removeElementsRecursive(other.root_);
   }
-  bool contains(const S& key) const
+
+  bool contains(const Key& key) const
   {
     return containsRecursive(root_, key);
   }
-  T& at(const S& key) const
+
+  Value& at(const Key& key) const
   {
-    return at(root_, key)->data_;
+    return at(root_, key)->value_;
   }
+
   size_t size() const
   {
     return sizeRecursive(root_);
   }
+
   size_t height() const
   {
     return heightRecursive(root_);
   }
-  friend AVLTree< S, T > getIntersectionTree(const AVLTree< S, T >& tree1, const AVLTree< S, T >& tree2)
-  {
-    AVLTree< S, T > intersectionTree;
-    getIntersectionTreeRecursive(tree1.root_, tree2, intersectionTree);
-    getIntersectionTreeRecursive(tree2.root_, tree1, intersectionTree);
-    return intersectionTree;
-  }
-  friend AVLTree< S, T > getDifferenceTree(const AVLTree< S, T >& tree1, const AVLTree< S, T >& tree2)
-  {
-    AVLTree< S, T > differenceTree;
-    getDifferenceTreeRecursive(tree1.root_, tree2, differenceTree);
-    getDifferenceTreeRecursive(tree2.root_, tree1, differenceTree);
-    return differenceTree;
-  }
-  AVLTree< S, T >& operator=(const AVLTree< S, T >& other)
+
+  AVLTree< Key, Value >& operator=(const AVLTree< Key, Value >& other)
   {
     if (this != &other)
     {
       removeSubTree(root_);
-      root_ = deepCopy(other.root_);
+      root_ = deepCopyNode(other.root_);
     }
     return *this;
   }
-  friend std::ostream& operator<<(std::ostream& os, const AVLTree< S, T >& tree)
+
+  friend std::ostream& operator<<(std::ostream& os, const AVLTree< Key, Value >& tree)
   {
     os << tree.root_;
     return os;
   }
+
   void display(std::ostream& out, std::string separator = ", ") const
   {
-    displayHelper(root_, out, separator);
+    displayRecursive(root_, out, separator);
   }
 
-  MyVector< S > getAllKeys() const
+  MyVector< Key > getAllKeys() const
   {
-    MyVector< S > keys;
+    MyVector< Key > keys;
     getAllRecursive(root_, keys);
     return keys;
   }
@@ -110,8 +104,8 @@ public:
 private:
   struct Node
   {
-    T data_;
-    S key_;
+    Value value_;
+    Key key_;
     Node* left_;
     Node* right_;
     size_t height_;
@@ -121,8 +115,9 @@ private:
       right_(nullptr),
       height_(1)
     {}
-    Node(const S& key, const T& data):
-      data_(data),
+
+    Node(const Key& key, const Value& value):
+      value_(value),
       key_(key),
       left_(nullptr),
       right_(nullptr),
@@ -132,7 +127,7 @@ private:
 
   Node* root_;
 
-  Node* deepCopy(Node* node)
+  Node* deepCopyNode(Node* node)
   {
     if (node == nullptr)
     {
@@ -141,46 +136,46 @@ private:
     else
     {
       Node* newNode = new Node;
-      newNode->data_ = node->data_;
+      newNode->value_ = node->value_;
       newNode->key_ = node->key_;
-      newNode->left_ = deepCopy(node->left_);
-      newNode->right_ = deepCopy(node->right_);
+      newNode->left_ = deepCopyNode(node->left_);
+      newNode->right_ = deepCopyNode(node->right_);
       newNode->height_ = node->height_;
       return newNode;
     }
   }
 
-  Node* insertRecursive(Node* node, const S& key, const T& data)
+  Node* insertRecursive(Node* node, const Key& key, const Value& value)
   {
     if (node == nullptr)
     {
-      return new Node(key, data);
+      return new Node(key, value);
     }
 
     if (key < node->key_)
     {
       if (node->left_ == nullptr)
       {
-        node->left_ = new Node(key, data);
+        node->left_ = new Node(key, value);
       }
       else
       {
-        node->left_ = insertRecursive(node->left_, key, data);
+        node->left_ = insertRecursive(node->left_, key, value);
       }
     }
     else if (key > node->key_)
     {
       if (node->right_ == nullptr)
       {
-        node->right_ = new Node(key, data);
+        node->right_ = new Node(key, value);
       }
       else
       {
-        node->right_ = insertRecursive(node->right_, key, data);
+        node->right_ = insertRecursive(node->right_, key, value);
       }
     }
-    node->height_ = 1 + std::max(heightRecursive(node->left_), heightRecursive(node->right_));
 
+    node->height_ = 1 + std::max(heightRecursive(node->left_), heightRecursive(node->right_));
     size_t balance = getBalance(node);
 
     if (balance > 1 && node->left_ && key < node->left_->key_)
@@ -210,7 +205,7 @@ private:
     return node;
   }
 
-  Node* removeRecursive(Node* node, const S& key)
+  Node* removeRecursive(Node* node, const Key& key)
   {
     if (node == nullptr)
     {
@@ -245,7 +240,6 @@ private:
     }
 
     node->height_ = 1 + std::max(heightRecursive(node->left_), heightRecursive(node->right_));
-
     size_t balance = getBalance(node);
 
     if (balance > 1 && getBalance(node->left_) >= 0)
@@ -274,7 +268,7 @@ private:
   {
     if (node != nullptr)
     {
-      insert(node->key_, node->data_);
+      insert(node->key_, node->value_);
       addElementsRecursive(node->left_);
       addElementsRecursive(node->right_);
     }
@@ -308,32 +302,6 @@ private:
     return node->height_;
   }
 
-  static void getIntersectionTreeRecursive(Node* node, const AVLTree< S, T >& tree, AVLTree< S, T >& intersectionTree)
-  {
-    if (node != nullptr)
-    {
-      if (tree.contains(node->key_))
-      {
-        intersectionTree.insert(node->key_, node->data_);
-      }
-      getIntersectionTreeRecursive(node->left_, tree, intersectionTree);
-      getIntersectionTreeRecursive(node->right_, tree, intersectionTree);
-    }
-  }
-
-  static void getDifferenceTreeRecursive(Node* node, const AVLTree< S, T >& tree, AVLTree< S, T >& differenceTree)
-  {
-    if (node != nullptr)
-    {
-      if (!tree.contains(node->key_))
-      {
-        differenceTree.insert(node->key_, node->data_);
-      }
-      getDifferenceTreeRecursive(node->left_, tree, differenceTree);
-      getDifferenceTreeRecursive(node->right_, tree, differenceTree);
-    }
-  }
-
   size_t getBalance(Node* node) const
   {
     if (node == nullptr)
@@ -345,40 +313,32 @@ private:
 
   Node* rightRotate(Node* node)
   {
-    if (node == nullptr || node->left_ == nullptr || node->left_->right_ == nullptr)
+    if (node == nullptr || node->left_ == nullptr)
     {
       return node;
     }
-
     Node* nextLeftNode = node->left_;
     Node* newRightSubtree = nextLeftNode->right_;
-
     nextLeftNode->right_ = node;
     node->left_ = newRightSubtree;
-
     node->height_ = 1 + std::max(heightRecursive(node->left_), heightRecursive(node->right_));
     nextLeftNode->height_ = 1 + std::max(heightRecursive(nextLeftNode->left_), heightRecursive(nextLeftNode->right_));
-
     return nextLeftNode;
   }
 
   Node* leftRotate(Node* node)
   {
-    if (node == nullptr || node->right_ == nullptr || node->right_->left_ == nullptr)
+    if (node == nullptr || node->right_ == nullptr)
     {
       return node;
     }
-
     Node* nextRightNode = node->right_;
     Node* newLeftSubtree = nextRightNode->left_;
-
     nextRightNode->left_ = node;
     node->right_ = newLeftSubtree;
-
     node->height_ = 1 + std::max(heightRecursive(node->left_), heightRecursive(node->right_));
     nextRightNode->height_ =
       1 + std::max(heightRecursive(nextRightNode->left_), heightRecursive(nextRightNode->right_));
-
     return nextRightNode;
   }
 
@@ -392,7 +352,7 @@ private:
     }
   }
 
-  Node* at(Node* node, const S& key) const
+  Node* at(Node* node, const Key& key) const
   {
     if (node == nullptr)
     {
@@ -412,16 +372,14 @@ private:
   Node* getMinValueNode(Node* node) const
   {
     Node* current = node;
-
     while (current && current->left_ != nullptr)
     {
       current = current->left_;
     }
-
     return current;
   }
 
-  bool containsRecursive(Node* node, const S& key) const
+  bool containsRecursive(Node* node, const Key& key) const
   {
     if (node == nullptr)
     {
@@ -442,25 +400,25 @@ private:
     }
   }
 
-  void displayHelper(const Node* node, std::ostream& out, const std::string& separator) const
+  void displayRecursive(const Node* node, std::ostream& out, const std::string& separator) const
   {
     if (node != nullptr)
     {
-      displayHelper(node->left_, out, separator);
+      displayRecursive(node->left_, out, separator);
       if (node->left_ != nullptr)
       {
         out << separator;
       }
-      out << node->key_ << ": " << node->data_;
+      out << node->key_ << ": " << node->value_;
       if (node->right_ != nullptr)
       {
         out << separator;
       }
-      displayHelper(node->right_, out, separator);
+      displayRecursive(node->right_, out, separator);
     }
   }
 
-  void getAllRecursive(const Node* node, MyVector< S >& keys) const
+  void getAllRecursive(const Node* node, MyVector< Key >& keys) const
   {
     if (node != nullptr)
     {
