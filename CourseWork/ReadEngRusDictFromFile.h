@@ -19,6 +19,10 @@ AVLTree< std::string, EngRusDict > ReadEngRusDictFromFile(std::string pathToFile
   std::string name;
   while (getline(file, name))
   {
+    if (name == "ALL")
+    {
+      throw std::invalid_argument("Нельзя создать словарь с именем \"ALL\"");
+    }
     if (EngRusDicts.contains(name))
     {
       throw std::invalid_argument("Словарь уже внесён в список");

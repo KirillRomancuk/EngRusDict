@@ -6,6 +6,10 @@ void cmd::createDict(AVLTree< std::string, EngRusDict >& NamedEngRusDicts, std::
 {
   std::string name;
   in >> name;
+  if (name == "ALL")
+  {
+    throw std::invalid_argument("Ќельз€ создать словарь с именем \"ALL\"");
+  }
   if (NamedEngRusDicts.contains(name))
   {
     throw std::runtime_error("ѕопытка создани€ двух словарей с одинаковыми названи€ми");
@@ -166,18 +170,18 @@ void cmd::readDicts(AVLTree< std::string, EngRusDict >& NamedEngRusDicts, std::i
 
 void cmd::help(std::ostream& out)
 {
-  out << "1 - createDict <new dictionary>\n";
-  out << "2 - removeDict <dictionary>\n";
-  out << "3 - add <dictionary> <english word> <translation>\n";
-  out << "4 - remove <dictionary> <english word> <ALL>/<translation>\n";
-  out << "5 - addWords <dictionaryIn> <dictionaryOut>\n";
-  out << "6 - removeWords <dictionaryIn> <dictionaryOut>\n";
-  out << "7 - getIntersection <new dictionary> <dictionaryOut> "
+  out << "1. createDict <new dictionary>\n";
+  out << "2. removeDict <dictionary>\n";
+  out << "3. add <dictionary> <english word> <translation>\n";
+  out << "4. remove <dictionary> <english word> <ALL>/<translation>\n";
+  out << "5. addWords <dictionaryIn> <dictionaryOut>\n";
+  out << "6. removeWords <dictionaryIn> <dictionaryOut>\n";
+  out << "7. getIntersection <new dictionary> <dictionaryOut> "
          "<dictionaryOut>\n";
-  out << "8 - getDifference <new dictionary> <dictionaryOut> <dictionaryOut>\n";
-  out << "9 - clear <dictionary>\n";
-  out << "10 - getTranslation <english word>\n";
-  out << "11 - readDicts <Path to the file>\n";
-  out << "12 - display <ALL>/<dictionary>\n";
-  out << "13 - help\n";
+  out << "8. getDifference <new dictionary> <dictionaryOut> <dictionaryOut>\n";
+  out << "9. clear <dictionary>\n";
+  out << "10. getTranslation <english word>\n";
+  out << "11. readDicts <Path to the file>\n";
+  out << "12. display <ALL>/<dictionary>\n";
+  out << "13. help\n";
 }
