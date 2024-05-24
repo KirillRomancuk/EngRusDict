@@ -34,11 +34,7 @@ namespace mapCommands
     return commands;
   }
 } // namespace mapCommands
-/*
-11 Input.txt
-10 book
-^Z
-*/
+
 int main()
 {
   system("chcp 1251");
