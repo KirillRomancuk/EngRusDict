@@ -51,7 +51,7 @@ AVLTree< std::string, EngRusDict > ReadEngRusDictFromFile(std::string pathToFile
         newErd.removeWord(eng);
       }
     }
-    EngRusDicts.insert(name, newErd);
+    EngRusDicts.INSERT(name, newErd);
   }
   file.close();
   return EngRusDicts;

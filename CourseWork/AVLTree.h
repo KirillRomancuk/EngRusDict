@@ -30,18 +30,18 @@ public:
 
   void clear()
   {
-    removeSubTree(root_);
+    deleteSubTree(root_);
     root_ = nullptr;
   }
 
-  void insert(const Key& key, const Value& value)
+  void INSERT(const Key& key, const Value& value)
   {
     root_ = insertRecursive(root_, key, value);
   }
 
-  void remove(const Key& key)
+  void DELETE(const Key& key)
   {
-    root_ = removeRecursive(root_, key);
+    root_ = deleteRecursive(root_, key);
   }
 
   void addElements(const AVLTree< Key, Value >& other)
@@ -49,9 +49,9 @@ public:
     addElementsRecursive(other.root_);
   }
 
-  void removeElements(const AVLTree< Key, Value >& other)
+  void deleteElements(const AVLTree< Key, Value >& other)
   {
-    removeElementsRecursive(other.root_);
+    deleteElementsRecursive(other.root_);
   }
 
   bool contains(const Key& key) const
@@ -59,9 +59,9 @@ public:
     return containsRecursive(root_, key);
   }
 
-  Value& at(const Key& key) const
+  Value& SEARCH(const Key& key) const
   {
-    return at(root_, key)->value_;
+    return search(root_, key)->value_;
   }
 
   size_t size() const
@@ -148,17 +148,17 @@ private:
     return balanceNode(node, key);
   }
 
-  Node* removeRecursive(Node* node, const Key& key)
+  Node* deleteRecursive(Node* node, const Key& key)
   {
     if (node == nullptr)
       return node;
     if (key < node->key_)
     {
-      node->left_ = removeRecursive(node->left_, key);
+      node->left_ = deleteRecursive(node->left_, key);
     }
     else if (key > node->key_)
     {
-      node->right_ = removeRecursive(node->right_, key);
+      node->right_ = deleteRecursive(node->right_, key);
     }
     else
     {
@@ -181,7 +181,7 @@ private:
         Node* temp = getMinValueNode(node->right_);
         node->key_ = temp->key_;
         node->value_ = temp->value_;
-        node->right_ = removeRecursive(node->right_, temp->key_);
+        node->right_ = deleteRecursive(node->right_, temp->key_);
       }
     }
     if (node == nullptr)
@@ -251,17 +251,17 @@ private:
     return y;
   }
 
-  void removeSubTree(Node* node)
+  void deleteSubTree(Node* node)
   {
     if (node != nullptr)
     {
-      removeSubTree(node->left_);
-      removeSubTree(node->right_);
+      deleteSubTree(node->left_);
+      deleteSubTree(node->right_);
       delete node;
     }
   }
 
-  Node* at(Node* node, const Key& key) const
+  Node* search(Node* node, const Key& key) const
   {
     if (node == nullptr)
     {
@@ -269,11 +269,11 @@ private:
     }
     if (key < node->key_)
     {
-      return at(node->left_, key);
+      return search(node->left_, key);
     }
     else if (key > node->key_)
     {
-      return at(node->right_, key);
+      return search(node->right_, key);
     }
     return node;
   }
@@ -355,19 +355,19 @@ private:
   {
     if (node != nullptr)
     {
-      insert(node->key_, node->value_);
+      INSERT(node->key_, node->value_);
       addElementsRecursive(node->left_);
       addElementsRecursive(node->right_);
     }
   }
 
-  void removeElementsRecursive(Node* node)
+  void deleteElementsRecursive(Node* node)
   {
     if (node != nullptr)
     {
-      remove(node->key_);
-      removeElementsRecursive(node->left_);
-      removeElementsRecursive(node->right_);
+      DELETE(node->key_);
+      deleteElementsRecursive(node->left_);
+      deleteElementsRecursive(node->right_);
     }
   }
 };

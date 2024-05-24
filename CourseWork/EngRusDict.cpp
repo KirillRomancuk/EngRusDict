@@ -28,7 +28,7 @@ MyVector< std::string > EngRusDict::getTranslations(const std::string& eng) cons
 {
   try
   {
-    return words_.at(eng);
+    return words_.SEARCH(eng);
   }
   catch (const std::invalid_argument&)
   {
@@ -45,7 +45,7 @@ size_t EngRusDict::getCountTranslations(const std::string& eng) const
 {
   try
   {
-    return words_.at(eng).size();
+    return words_.SEARCH(eng).size();
   }
   catch (const std::invalid_argument&)
   {
@@ -64,7 +64,7 @@ void EngRusDict::addTranslation(const std::string& eng, const std::string& trans
   {
     throw std::invalid_argument("Неверный формат слова");
   }
-  MyVector< std::string >& translations = words_.at(eng);
+  MyVector< std::string >& translations = words_.SEARCH(eng);
   translations.push_back(getLettersToLower(translation));
   std::sort(translations.begin(), translations.end());
 }
@@ -76,7 +76,7 @@ void EngRusDict::removeTranslation(const std::string& eng, const std::string& tr
     std::string errorMessege = "Слово \"" + eng + "\" не найдено";
     throw std::invalid_argument(errorMessege);
   }
-  MyVector< std::string >& translations = words_.at(eng);
+  MyVector< std::string >& translations = words_.SEARCH(eng);
   translations.erase(translations.findIndexElement(translation));
 }
 
@@ -86,12 +86,12 @@ void EngRusDict::addWord(const std::string& eng)
   {
     throw std::invalid_argument("Неверный формат слова");
   }
-  words_.insert(getLettersToLower(eng), MyVector< std::string >());
+  words_.INSERT(getLettersToLower(eng), MyVector< std::string >());
 }
 
 void EngRusDict::removeWord(const std::string& eng)
 {
-  words_.remove(eng);
+  words_.DELETE(eng);
 }
 
 void EngRusDict::addWordFromEngRusDict(const EngRusDict& other) // Точно ли всё верно?
@@ -100,8 +100,8 @@ void EngRusDict::addWordFromEngRusDict(const EngRusDict& other) // Точно ли всё 
   {
     if (words_.contains(key))
     {
-      MyVector< std::string >& translations = words_.at(key);
-      for (const std::string& translation : other.words_.at(key))
+      MyVector< std::string >& translations = words_.SEARCH(key);
+      for (const std::string& translation : other.words_.SEARCH(key))
       {
         if (!translations.contains(translation))
         {
@@ -112,14 +112,14 @@ void EngRusDict::addWordFromEngRusDict(const EngRusDict& other) // Точно ли всё 
     }
     else
     {
-      words_.insert(key, other.words_.at(key));
+      words_.INSERT(key, other.words_.SEARCH(key));
     }
   }
 }
 
 void EngRusDict::removeWordFromEngRusDict(const EngRusDict& other) // Точно ли всё верно?
 {
-  words_.removeElements(other.words_);
+  words_.deleteElements(other.words_);
 }
 
 void EngRusDict::display(std::ostream& out) const
@@ -145,7 +145,7 @@ EngRusDict getIntersectionWithEngRusDict(const EngRusDict& erd1, const EngRusDic
     if (erd1.words_.contains(key))
     {
       result.addWord(key);
-      for (std::string& translation : getIntersectionVector(erd1.words_.at(key), erd2.words_.at(key)))
+      for (std::string& translation : getIntersectionVector(erd1.words_.SEARCH(key), erd2.words_.SEARCH(key)))
       {
         result.addTranslation(key, translation);
       }
@@ -162,7 +162,7 @@ EngRusDict getDifferenceWithEngRusDict(const EngRusDict& erd1, const EngRusDict&
     if (!erd1.words_.contains(key))
     {
       result.addWord(key);
-      for (std::string& translation : erd2.words_.at(key))
+      for (std::string& translation : erd2.words_.SEARCH(key))
       {
         result.addTranslation(key, translation);
       }
@@ -173,7 +173,7 @@ EngRusDict getDifferenceWithEngRusDict(const EngRusDict& erd1, const EngRusDict&
     if (!erd2.words_.contains(key))
     {
       result.addWord(key);
-      for (std::string& translation : erd1.words_.at(key))
+      for (std::string& translation : erd1.words_.SEARCH(key))
       {
         result.addTranslation(key, translation);
       }

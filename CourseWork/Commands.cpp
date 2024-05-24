@@ -11,7 +11,7 @@ void cmd::createDict(AVLTree< std::string, EngRusDict >& NamedEngRusDicts, std::
     throw std::runtime_error("Попытка создания двух словарей с одинаковыми названиями");
   }
   EngRusDict newErd;
-  NamedEngRusDicts.insert(name, newErd);
+  NamedEngRusDicts.INSERT(name, newErd);
 }
 
 void cmd::removeDict(AVLTree< std::string, EngRusDict >& NamedEngRusDicts, std::istream& in)
@@ -22,7 +22,7 @@ void cmd::removeDict(AVLTree< std::string, EngRusDict >& NamedEngRusDicts, std::
   {
     throw std::runtime_error("Попытка удаления словаря с одинаковыми названиями");
   }
-  NamedEngRusDicts.remove(name);
+  NamedEngRusDicts.DELETE(name);
 }
 
 void cmd::add(AVLTree< std::string, EngRusDict >& NamedEngRusDicts, std::istream& in)
@@ -34,11 +34,11 @@ void cmd::add(AVLTree< std::string, EngRusDict >& NamedEngRusDicts, std::istream
   in >> key >> translation;
   try
   {
-    NamedEngRusDicts.at(name).addTranslation(key, translation);
+    NamedEngRusDicts.SEARCH(name).addTranslation(key, translation);
   }
   catch (const std::invalid_argument&)
   {
-    EngRusDict& erd = NamedEngRusDicts.at(name);
+    EngRusDict& erd = NamedEngRusDicts.SEARCH(name);
     erd.addWord(key);
     erd.addTranslation(key, translation);
   }
@@ -53,13 +53,13 @@ void cmd::remove(AVLTree< std::string, EngRusDict >& NamedEngRusDicts, std::istr
   in >> key >> translation;
   if (translation == "ALL")
   {
-    NamedEngRusDicts.at(name).removeWord(key);
+    NamedEngRusDicts.SEARCH(name).removeWord(key);
   }
   else
   {
     try
     {
-      NamedEngRusDicts.at(name).removeTranslation(key, translation);
+      NamedEngRusDicts.SEARCH(name).removeTranslation(key, translation);
     }
     catch (const std::invalid_argument&)
     {
@@ -72,14 +72,14 @@ void cmd::addWords(AVLTree< std::string, EngRusDict >& NamedEngRusDicts, std::is
 {
   std::string nameFirstDict, nameSecondDict;
   in >> nameFirstDict >> nameSecondDict;
-  NamedEngRusDicts.at(nameFirstDict).addWordFromEngRusDict(NamedEngRusDicts.at(nameSecondDict));
+  NamedEngRusDicts.SEARCH(nameFirstDict).addWordFromEngRusDict(NamedEngRusDicts.SEARCH(nameSecondDict));
 }
 
 void cmd::removeWords(AVLTree< std::string, EngRusDict >& NamedEngRusDicts, std::istream& in)
 {
   std::string nameFirstDict, nameSecondDict;
   in >> nameFirstDict >> nameSecondDict;
-  NamedEngRusDicts.at(nameFirstDict).removeWordFromEngRusDict(NamedEngRusDicts.at(nameSecondDict));
+  NamedEngRusDicts.SEARCH(nameFirstDict).removeWordFromEngRusDict(NamedEngRusDicts.SEARCH(nameSecondDict));
 }
 
 void cmd::getIntersection(AVLTree< std::string, EngRusDict >& NamedEngRusDicts, std::istream& in)
@@ -91,8 +91,8 @@ void cmd::getIntersection(AVLTree< std::string, EngRusDict >& NamedEngRusDicts, 
     throw std::runtime_error("Попытка создания двух словарей с одинаковыми названиями");
   }
   in >> nameFirstDict >> nameSecondDict;
-  NamedEngRusDicts.insert(
-    name, getIntersectionWithEngRusDict(NamedEngRusDicts.at(nameFirstDict), NamedEngRusDicts.at(nameSecondDict))
+  NamedEngRusDicts.INSERT(
+    name, getIntersectionWithEngRusDict(NamedEngRusDicts.SEARCH(nameFirstDict), NamedEngRusDicts.SEARCH(nameSecondDict))
   );
 }
 
@@ -105,8 +105,8 @@ void cmd::getDifference(AVLTree< std::string, EngRusDict >& NamedEngRusDicts, st
     throw std::runtime_error("Попытка создания двух словарей с одинаковыми названиями");
   }
   in >> nameFirstDict >> nameSecondDict;
-  NamedEngRusDicts.insert(
-    name, getDifferenceWithEngRusDict(NamedEngRusDicts.at(nameFirstDict), NamedEngRusDicts.at(nameSecondDict))
+  NamedEngRusDicts.INSERT(
+    name, getDifferenceWithEngRusDict(NamedEngRusDicts.SEARCH(nameFirstDict), NamedEngRusDicts.SEARCH(nameSecondDict))
   );
 }
 
@@ -114,7 +114,7 @@ void cmd::clear(AVLTree< std::string, EngRusDict >& NamedEngRusDicts, std::istre
 {
   std::string name;
   in >> name;
-  NamedEngRusDicts.at(name).clear();
+  NamedEngRusDicts.SEARCH(name).clear();
 }
 
 void cmd::display(AVLTree< std::string, EngRusDict >& NamedEngRusDicts, std::istream& in, std::ostream& out)
@@ -125,13 +125,13 @@ void cmd::display(AVLTree< std::string, EngRusDict >& NamedEngRusDicts, std::ist
   {
     for (const std::string& key : NamedEngRusDicts.getAllKeys())
     {
-      out << "Dictionary Name: \"" << key << "\"  Words: " << NamedEngRusDicts.at(key).getCountWords() << ":\n";
-      NamedEngRusDicts.at(key).display(out);
+      out << "Dictionary Name: \"" << key << "\"  Words: " << NamedEngRusDicts.SEARCH(key).getCountWords() << ":\n";
+      NamedEngRusDicts.SEARCH(key).display(out);
     }
   }
   else
   {
-    NamedEngRusDicts.at(name).display(out);
+    NamedEngRusDicts.SEARCH(name).display(out);
   }
 }
 
@@ -142,7 +142,7 @@ void cmd::getTranslation(AVLTree< std::string, EngRusDict >& NamedEngRusDicts, s
   MyVector< std::string > result;
   for (const std::string& name : NamedEngRusDicts.getAllKeys())
   {
-    for (const std::string& translation : NamedEngRusDicts.at(name).getTranslations(key))
+    for (const std::string& translation : NamedEngRusDicts.SEARCH(name).getTranslations(key))
     {
       if (translation != "" && !result.contains(translation))
       {
