@@ -89,7 +89,7 @@ public:
     return os;
   }
 
-  void display(std::ostream& out, std::string separator = ", ") const
+  void display(std::ostream& out, const std::string separator = ", ") const
   {
     displayRecursive(root_, out, separator);
   }
@@ -97,7 +97,7 @@ public:
   MyVector< Key > getAllKeys() const
   {
     MyVector< Key > keys;
-    getAllRecursive(root_, keys);
+    getAllKeysRecursive(root_, keys);
     return keys;
   }
 
@@ -418,13 +418,13 @@ private:
     }
   }
 
-  void getAllRecursive(const Node* node, MyVector< Key >& keys) const
+  void getAllKeysRecursive(const Node* node, MyVector< Key >& keys) const
   {
     if (node != nullptr)
     {
-      getAllRecursive(node->left_, keys);
+      getAllKeysRecursive(node->left_, keys);
       keys.push_back(node->key_);
-      getAllRecursive(node->right_, keys);
+      getAllKeysRecursive(node->right_, keys);
     }
   }
 };

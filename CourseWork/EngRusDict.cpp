@@ -32,7 +32,7 @@ MyVector< std::string > EngRusDict::getTranslations(const std::string& eng) cons
   }
   catch (const std::invalid_argument&)
   {
-    return MyVector<std::string>();
+    return MyVector< std::string >();
   }
 }
 
@@ -60,6 +60,10 @@ void EngRusDict::addTranslation(const std::string& eng, const std::string& trans
     std::string errorMessege = "Слово \"" + eng + "\" не найдено";
     throw std::invalid_argument(errorMessege);
   }
+  if (!isOnlyRussianCharacters(translation))
+  {
+    throw std::invalid_argument("Неверный формат слова");
+  }
   MyVector< std::string >& translations = words_.at(eng);
   translations.push_back(getLettersToLower(translation));
   std::sort(translations.begin(), translations.end());
@@ -78,6 +82,10 @@ void EngRusDict::removeTranslation(const std::string& eng, const std::string& tr
 
 void EngRusDict::addWord(const std::string& eng)
 {
+  if (!isOnlyEnglishCharacters(eng))
+  {
+    throw std::invalid_argument("Неверный формат слова");
+  }
   words_.insert(getLettersToLower(eng), MyVector< std::string >());
 }
 
@@ -86,12 +94,12 @@ void EngRusDict::removeWord(const std::string& eng)
   words_.remove(eng);
 }
 
-void EngRusDict::addWordFromEngRusDict(EngRusDict& other)
+void EngRusDict::addWordFromEngRusDict(const EngRusDict& other) // Точно ли всё верно?
 {
   words_.addElements(other.words_);
 }
 
-void EngRusDict::removeWordFromEngRusDict(EngRusDict& other)
+void EngRusDict::removeWordFromEngRusDict(const EngRusDict& other) // Точно ли всё верно?
 {
   words_.removeElements(other.words_);
 }
@@ -111,7 +119,7 @@ EngRusDict& EngRusDict::operator=(const EngRusDict& other)
   return *this;
 }
 
-EngRusDict getIntersectionWithEngRusDict(EngRusDict& erd1, EngRusDict& erd2)
+EngRusDict getIntersectionWithEngRusDict(const EngRusDict& erd1, const EngRusDict& erd2)
 {
   EngRusDict result;
   for (std::string& key : erd2.words_.getAllKeys())
@@ -128,7 +136,7 @@ EngRusDict getIntersectionWithEngRusDict(EngRusDict& erd1, EngRusDict& erd2)
   return result;
 }
 
-EngRusDict getDifferenceWithEngRusDict(EngRusDict& erd1, EngRusDict& erd2)
+EngRusDict getDifferenceWithEngRusDict(const EngRusDict& erd1, const EngRusDict& erd2)
 {
   EngRusDict result;
   for (std::string& key : erd2.words_.getAllKeys())
@@ -160,4 +168,28 @@ std::string EngRusDict::getLettersToLower(std::string word)
 {
   std::transform(word.begin(), word.end(), word.begin(), std::bind(std::tolower, std::placeholders::_1));
   return word;
+}
+
+bool EngRusDict::isOnlyEnglishCharacters(const std::string& word) const
+{
+  for (char letter : word)
+  {
+    if ((letter < 'a' || letter > 'z') && (letter < 'A' || letter > 'Z'))
+    {
+      return false;
+    }
+  }
+  return true;
+}
+
+bool EngRusDict::isOnlyRussianCharacters(const std::string& word) const
+{
+  for (char letter : word)
+  {
+    if ((letter < 'а' || letter > 'я') && (letter < 'А' || letter > 'Я') && letter != 'ё' && letter != 'Ё')
+    {
+      return false;
+    }
+  }
+  return true;
 }

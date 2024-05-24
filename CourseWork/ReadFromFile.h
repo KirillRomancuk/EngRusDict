@@ -57,4 +57,4 @@ AVLTree< std::string, EngRusDict > ReadEngRusDictFromFile(std::string pathToFile
   return EngRusDicts;
 }
 
-#endif  // !READFROMFILE_H
+#endif // !READFROMFILE_H

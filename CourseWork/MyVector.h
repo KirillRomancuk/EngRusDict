@@ -20,7 +20,7 @@ public:
     capacity_(0)
   {}
 
-    MyVector(const MyVector& other):
+  MyVector(const MyVector& other):
     size_(other.size_),
     capacity_(other.size_)
   {
@@ -68,12 +68,10 @@ public:
     {
       throw std::out_of_range("Индекс вне диапазона");
     }
-
     for (size_t i = index; i < size_ - 1; ++i)
     {
       array_[i] = array_[i + 1];
     }
-
     size_--;
   }
 
@@ -88,7 +86,6 @@ public:
     }
     return false;
   }
-
 
   size_t getSize() const
   {
@@ -155,7 +152,6 @@ public:
     }
     return *this;
   }
-
 
   friend std::ostream& operator<<(std::ostream& out, const MyVector< T >& vector)
   {

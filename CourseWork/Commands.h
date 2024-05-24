@@ -4,7 +4,7 @@
 #include "EngRusDict.h"
 #include "MyVector.h"
 
-namespace cmd  // command
+namespace cmd // command
 {
   void createDict(AVLTree< std::string, EngRusDict >& vector, std::istream& in);
   void removeDict(AVLTree< std::string, EngRusDict >& vector, std::istream& in);
@@ -16,10 +16,9 @@ namespace cmd  // command
   void getDifference(AVLTree< std::string, EngRusDict >& vector, std::istream& in);
   void clear(AVLTree< std::string, EngRusDict >& vector, std::istream& in);
   void display(AVLTree< std::string, EngRusDict >& vector, std::istream& in, std::ostream& out);
-  void getTranslation(AVLTree< std::string, EngRusDict >& vector, std::istream& in,
-                    std::ostream& out);
+  void getTranslation(AVLTree< std::string, EngRusDict >& vector, std::istream& in, std::ostream& out);
   void readDicts(AVLTree< std::string, EngRusDict >& vector, std::istream& in);
   void help(std::ostream& out);
-}  // namespace cmd
+} // namespace cmd
 
-#endif  // !COMMANDS_H
+#endif // !COMMANDS_H

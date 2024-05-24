@@ -135,7 +135,7 @@ void cmd::getTranslation(AVLTree< std::string, EngRusDict >& vector, std::istrea
 {
   std::string key;
   std::cin >> key;
-  MyVector <std::string> result;
+  MyVector< std::string > result;
   for (const std::string& name : vector.getAllKeys())
   {
     for (const std::string& translation : vector.at(name).getTranslations(key))

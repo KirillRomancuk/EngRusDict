@@ -14,7 +14,7 @@ public:
   ~EngRusDict();
   void clear();
 
-  MyVector<std::string> getTranslations(const std::string& eng) const;
+  MyVector< std::string > getTranslations(const std::string& eng) const;
 
   size_t getCountWords() const;
   size_t getCountTranslations(const std::string& eng) const;
@@ -24,11 +24,11 @@ public:
   void addWord(const std::string& eng);
   void removeWord(const std::string& eng);
 
-  void addWordFromEngRusDict(EngRusDict& other);
-  void removeWordFromEngRusDict(EngRusDict& other);
+  void addWordFromEngRusDict(const EngRusDict& other);
+  void removeWordFromEngRusDict(const EngRusDict& other);
 
-  friend EngRusDict getIntersectionWithEngRusDict(EngRusDict& erd1, EngRusDict& erd2);
-  friend EngRusDict getDifferenceWithEngRusDict(EngRusDict& erd1, EngRusDict& erd2);
+  friend EngRusDict getIntersectionWithEngRusDict(const EngRusDict& erd1, const EngRusDict& erd2);
+  friend EngRusDict getDifferenceWithEngRusDict(const EngRusDict& erd1, const EngRusDict& erd2);
 
   void display(std::ostream& out) const;
 
@@ -38,6 +38,9 @@ private:
   AVLTree< std::string, MyVector< std::string > > words_;
 
   std::string getLettersToLower(std::string word);
+
+  bool isOnlyEnglishCharacters(const std::string& word) const;
+  bool isOnlyRussianCharacters(const std::string& word) const;
 };
 
-#endif  // !ENGRUSDICT_H
+#endif // !ENGRUSDICT_H
