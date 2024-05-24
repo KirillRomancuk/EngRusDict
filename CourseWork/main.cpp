@@ -68,19 +68,16 @@ int main()
     {
       commands.at(command)(std::cin, std::cout);
     }
-    catch (const std::out_of_range& ex)
+    catch (const std::out_of_range&)
     {
-      std::cerr << ex.what() << "\n";
       invalidCommand();
     }
-    catch (const std::runtime_error& ex)
+    catch (const std::runtime_error&)
     {
-      std::cerr << ex.what() << "\n";
       invalidCommand();
     }
-    catch (const std::invalid_argument& ex)
+    catch (const std::invalid_argument&)
     {
-      std::cerr << ex.what() << "\n";
       invalidCommand();
     }
   }
