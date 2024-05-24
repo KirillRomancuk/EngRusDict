@@ -45,7 +45,7 @@ size_t EngRusDict::getCountTranslations(const std::string& eng) const
 {
   try
   {
-    return words_.at(eng).getSize();
+    return words_.at(eng).size();
   }
   catch (const std::invalid_argument&)
   {
@@ -96,7 +96,25 @@ void EngRusDict::removeWord(const std::string& eng)
 
 void EngRusDict::addWordFromEngRusDict(const EngRusDict& other) // Точно ли всё верно?
 {
-  words_.addElements(other.words_);
+  for (const std::string& key : other.words_.getAllKeys())
+  {
+    if (words_.contains(key))
+    {
+      MyVector< std::string >& translations = words_.at(key);
+      for (const std::string& translation : other.words_.at(key))
+      {
+        if (!translations.contains(translation))
+        {
+          translations.push_back(translation);
+        }
+      }
+      std::sort(translations.begin(), translations.end());
+    }
+    else
+    {
+      words_.insert(key, other.words_.at(key));
+    }
+  }
 }
 
 void EngRusDict::removeWordFromEngRusDict(const EngRusDict& other) // Точно ли всё верно?

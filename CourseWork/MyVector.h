@@ -2,7 +2,6 @@
 #define MYVECTOR_H
 
 #include <iostream>
-#include <stdexcept>
 
 template < class T >
 class MyVector
@@ -87,7 +86,7 @@ public:
     return false;
   }
 
-  size_t getSize() const
+  size_t size() const
   {
     return size_;
   }
@@ -155,7 +154,7 @@ public:
 
   friend std::ostream& operator<<(std::ostream& out, const MyVector< T >& vector)
   {
-    for (size_t i = 0; i < vector.getSize(); i++)
+    for (size_t i = 0; i < vector.size(); i++)
     {
       out << vector[i] << " ";
     }
@@ -167,7 +166,7 @@ template < class T >
 MyVector< T > getIntersectionVector(const MyVector< T >& vector1, const MyVector< T >& vector2)
 {
   MyVector< T > intersection;
-  for (size_t i = 0; i < vector1.getSize(); ++i)
+  for (size_t i = 0; i < vector1.size(); ++i)
   {
     if (vector2.contains(vector1[i]))
     {

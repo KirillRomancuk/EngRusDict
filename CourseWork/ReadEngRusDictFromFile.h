@@ -1,5 +1,5 @@
-#ifndef READFROMFILE_H
-#define READFROMFILE_H
+#ifndef READENGRUSDICTFROMFILE_H
+#define READENGRUSDICTFROMFILE_H
 
 #include <fstream>
 #include <sstream>
@@ -57,4 +57,4 @@ AVLTree< std::string, EngRusDict > ReadEngRusDictFromFile(std::string pathToFile
   return EngRusDicts;
 }
 
-#endif // !READFROMFILE_H
+#endif // !READENGRUSDICTFROMFILE_H
