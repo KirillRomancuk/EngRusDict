@@ -3,7 +3,6 @@
 
 #include <algorithm>
 #include <iostream>
-
 #include "MyVector.h"
 
 template < class Key, class Value >
@@ -11,10 +10,12 @@ class AVLTree
 {
 public:
   AVLTree():
-    root_(nullptr){};
+    root_(nullptr)
+  {}
 
   AVLTree(const AVLTree< Key, Value >& other):
-    root_(deepCopyNode(other.root_)){};
+    root_(deepCopyNode(other.root_))
+  {}
 
   AVLTree(AVLTree< Key, Value >&& other) noexcept:
     root_(other.root_)
@@ -68,25 +69,14 @@ public:
     return sizeRecursive(root_);
   }
 
-  size_t height() const
-  {
-    return heightRecursive(root_);
-  }
-
   AVLTree< Key, Value >& operator=(const AVLTree< Key, Value >& other)
   {
     if (this != &other)
     {
-      removeSubTree(root_);
+      clear();
       root_ = deepCopyNode(other.root_);
     }
     return *this;
-  }
-
-  friend std::ostream& operator<<(std::ostream& os, const AVLTree< Key, Value >& tree)
-  {
-    os << tree.root_;
-    return os;
   }
 
   void display(std::ostream& out, const std::string separator = ", ") const
@@ -108,12 +98,12 @@ private:
     Key key_;
     Node* left_;
     Node* right_;
-    size_t height_;
+    int balance_;
 
     Node():
       left_(nullptr),
       right_(nullptr),
-      height_(1)
+      balance_(0)
     {}
 
     Node(const Key& key, const Value& value):
@@ -121,7 +111,7 @@ private:
       key_(key),
       left_(nullptr),
       right_(nullptr),
-      height_(1)
+      balance_(0)
     {}
   };
 
@@ -130,88 +120,38 @@ private:
   Node* deepCopyNode(Node* node)
   {
     if (node == nullptr)
-    {
       return nullptr;
-    }
-    else
-    {
-      Node* newNode = new Node;
-      newNode->value_ = node->value_;
-      newNode->key_ = node->key_;
-      newNode->left_ = deepCopyNode(node->left_);
-      newNode->right_ = deepCopyNode(node->right_);
-      newNode->height_ = node->height_;
-      return newNode;
-    }
+    Node* newNode = new Node(node->key_, node->value_);
+    newNode->left_ = deepCopyNode(node->left_);
+    newNode->right_ = deepCopyNode(node->right_);
+    newNode->balance_ = node->balance_;
+    return newNode;
   }
 
   Node* insertRecursive(Node* node, const Key& key, const Value& value)
   {
     if (node == nullptr)
-    {
       return new Node(key, value);
-    }
-
     if (key < node->key_)
     {
-      if (node->left_ == nullptr)
-      {
-        node->left_ = new Node(key, value);
-      }
-      else
-      {
-        node->left_ = insertRecursive(node->left_, key, value);
-      }
+      node->left_ = insertRecursive(node->left_, key, value);
     }
     else if (key > node->key_)
     {
-      if (node->right_ == nullptr)
-      {
-        node->right_ = new Node(key, value);
-      }
-      else
-      {
-        node->right_ = insertRecursive(node->right_, key, value);
-      }
+      node->right_ = insertRecursive(node->right_, key, value);
     }
-
-    node->height_ = 1 + std::max(heightRecursive(node->left_), heightRecursive(node->right_));
-    size_t balance = getBalance(node);
-
-    if (balance > 1 && node->left_ && key < node->left_->key_)
+    else
     {
-      return rightRotate(node);
+      return node;
     }
-    if (balance < -1 && node->right_ && key > node->right_->key_)
-    {
-      return leftRotate(node);
-    }
-    if (balance > 1 && node->left_ && key > node->left_->key_)
-    {
-      if (node->left_ && node->left_->left_ && key > node->left_->left_->key_)
-      {
-        node->left_ = leftRotate(node->left_);
-      }
-      return rightRotate(node);
-    }
-    if (balance < -1 && node->right_ && key < node->right_->key_)
-    {
-      if (node->right_ && node->right_->right_ && key < node->right_->right_->key_)
-      {
-        node->right_ = rightRotate(node->right_);
-      }
-      return leftRotate(node);
-    }
-    return node;
+    updateBalance(node);
+    return balanceNode(node, key);
   }
 
   Node* removeRecursive(Node* node, const Key& key)
   {
     if (node == nullptr)
-    {
       return node;
-    }
-
     if (key < node->key_)
     {
       node->left_ = removeRecursive(node->left_, key);
@@ -222,26 +162,46 @@ private:
     }
     else
     {
-      if (node->left_ == nullptr)
+      if (node->left_ == nullptr || node->right_ == nullptr)
       {
-        Node* temp = node->right_;
-        delete node;
-        return temp;
+        Node* temp = node->left_ ? node->left_ : node->right_;
+        if (temp == nullptr)
+        {
+          temp = node;
+          node = nullptr;
+        }
+        else
+        {
+          *node = *temp; // Copy the contents of the non-empty child
+        }
+        delete temp;
       }
-      else if (node->right_ == nullptr)
+      else
       {
-        Node* temp = node->left_;
-        delete node;
-        return temp;
+        Node* temp = getMinValueNode(node->right_);
+        node->key_ = temp->key_;
+        node->value_ = temp->value_;
+        node->right_ = removeRecursive(node->right_, temp->key_);
       }
-      Node* temp = getMinValueNode(node->right_);
-      node->key_ = temp->key_;
-      node->right_ = removeRecursive(node->right_, temp->key_);
     }
+    if (node == nullptr)
+      return node;
+    updateBalance(node);
+    return balanceNode(node, key);
+  }
 
-    node->height_ = 1 + std::max(heightRecursive(node->left_), heightRecursive(node->right_));
-    size_t balance = getBalance(node);
+  void updateBalance(Node* node)
+  {
+    if (node == nullptr)
+      return;
+    int leftHeight = (node->left_ ? node->left_->balance_ : 0);
+    int rightHeight = (node->right_ ? node->right_->balance_ : 0);
+    node->balance_ = 1 + std::max(leftHeight, rightHeight);
+  }
 
+  Node* balanceNode(Node* node, const Key& key)
+  {
+    int balance = getBalance(node);
     if (balance > 1 && getBalance(node->left_) >= 0)
     {
       return rightRotate(node);
@@ -260,86 +220,35 @@ private:
       node->right_ = rightRotate(node->right_);
       return leftRotate(node);
     }
-
     return node;
   }
 
-  void addElementsRecursive(Node* node)
+  Node* rightRotate(Node* y)
   {
-    if (node != nullptr)
-    {
-      insert(node->key_, node->value_);
-      addElementsRecursive(node->left_);
-      addElementsRecursive(node->right_);
-    }
+    Node* x = y->left_;
+    Node* T2 = x->right_;
+
+    x->right_ = y;
+    y->left_ = T2;
+
+    updateBalance(y);
+    updateBalance(x);
+
+    return x;
   }
 
-  void removeElementsRecursive(Node* node)
+  Node* leftRotate(Node* x)
   {
-    if (node != nullptr)
-    {
-      remove(node->key_);
-      removeElementsRecursive(node->left_);
-      removeElementsRecursive(node->right_);
-    }
-  }
+    Node* y = x->right_;
+    Node* T2 = y->left_;
 
-  size_t sizeRecursive(Node* node) const
-  {
-    if (node == nullptr)
-    {
-      return 0;
-    }
-    return 1 + sizeRecursive(node->left_) + sizeRecursive(node->right_);
-  }
+    y->left_ = x;
+    x->right_ = T2;
 
-  size_t heightRecursive(Node* node) const
-  {
-    if (node == nullptr)
-    {
-      return 0;
-    }
-    return node->height_;
-  }
+    updateBalance(x);
+    updateBalance(y);
 
-  size_t getBalance(Node* node) const
-  {
-    if (node == nullptr)
-    {
-      return 0;
-    }
-    return heightRecursive(node->left_) - heightRecursive(node->right_);
-  }
-
-  Node* rightRotate(Node* node)
-  {
-    if (node == nullptr || node->left_ == nullptr)
-    {
-      return node;
-    }
-    Node* nextLeftNode = node->left_;
-    Node* newRightSubtree = nextLeftNode->right_;
-    nextLeftNode->right_ = node;
-    node->left_ = newRightSubtree;
-    node->height_ = 1 + std::max(heightRecursive(node->left_), heightRecursive(node->right_));
-    nextLeftNode->height_ = 1 + std::max(heightRecursive(nextLeftNode->left_), heightRecursive(nextLeftNode->right_));
-    return nextLeftNode;
-  }
-
-  Node* leftRotate(Node* node)
-  {
-    if (node == nullptr || node->right_ == nullptr)
-    {
-      return node;
-    }
-    Node* nextRightNode = node->right_;
-    Node* newLeftSubtree = nextRightNode->left_;
-    nextRightNode->left_ = node;
-    node->right_ = newLeftSubtree;
-    node->height_ = 1 + std::max(heightRecursive(node->left_), heightRecursive(node->right_));
-    nextRightNode->height_ =
-      1 + std::max(heightRecursive(nextRightNode->left_), heightRecursive(nextRightNode->right_));
-    return nextRightNode;
+    return y;
   }
 
   void removeSubTree(Node* node)
@@ -356,17 +265,17 @@ private:
   {
     if (node == nullptr)
     {
-      throw std::invalid_argument("Нет никакого указанного элемента");
-    }
-    if (node->key_ == key)
-    {
-      return node;
+      throw std::invalid_argument("No element found with the given key");
     }
     if (key < node->key_)
     {
       return at(node->left_, key);
     }
-    return at(node->right_, key);
+    else if (key > node->key_)
+    {
+      return at(node->right_, key);
+    }
+    return node;
   }
 
   Node* getMinValueNode(Node* node) const
@@ -385,7 +294,6 @@ private:
     {
       return false;
     }
-
     if (key < node->key_)
     {
       return containsRecursive(node->left_, key);
@@ -394,10 +302,7 @@ private:
     {
       return containsRecursive(node->right_, key);
     }
-    else
-    {
-      return true;
-    }
+    return true;
   }
 
   void displayRecursive(const Node* node, std::ostream& out, const std::string& separator) const
@@ -427,6 +332,44 @@ private:
       getAllKeysRecursive(node->right_, keys);
     }
   }
+
+  size_t sizeRecursive(Node* node) const
+  {
+    if (node == nullptr)
+    {
+      return 0;
+    }
+    return 1 + sizeRecursive(node->left_) + sizeRecursive(node->right_);
+  }
+
+  int getBalance(Node* node) const
+  {
+    if (node == nullptr)
+      return 0;
+    int leftHeight = (node->left_ ? node->left_->balance_ : 0);
+    int rightHeight = (node->right_ ? node->right_->balance_ : 0);
+    return leftHeight - rightHeight;
+  }
+
+  void addElementsRecursive(Node* node)
+  {
+    if (node != nullptr)
+    {
+      insert(node->key_, node->value_);
+      addElementsRecursive(node->left_);
+      addElementsRecursive(node->right_);
+    }
+  }
+
+  void removeElementsRecursive(Node* node)
+  {
+    if (node != nullptr)
+    {
+      remove(node->key_);
+      removeElementsRecursive(node->left_);
+      removeElementsRecursive(node->right_);
+    }
+  }
 };
 
-#endif // !AVLTREE_H
+#endif // AVLTREE_H
